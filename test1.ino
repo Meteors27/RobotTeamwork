@@ -83,6 +83,7 @@ void setup() {
   pinMode(MYPIN, INPUT);
 }
 
+
 void loop() {
   if(cnt%3 == 1 && sonar.ping_cm() <= 50){
       motor.runright(60);
