@@ -1,15 +1,20 @@
 #include <TB6612.h>
 #include <GreyScaleSensor.h>
-
-#define MYPIN 20
+#include <NewPing.h>
+#define MYPIN 32
 
 #define TURNRIGHT   1
 #define TURNBACK    2
 #define ENV WHITELINE
 #define LINE BLACKLINE
 
-TB6612 motor = TB6612(9, 10, 8, 12, 11, 13, 7);
-GREYSCALESENSOR sensor = GREYSCALESENSOR(A2,A1,A0,500,LINE);
+#define TRIGGER_PIN  22  
+#define ECHO_PIN     23
+#define MAX_DISTANCE 80
+
+TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
+GREYSCALESENSOR sensor = GREYSCALESENSOR(A0,A1,A2,500,LINE);
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 int cnt = 0;
 int next = TURNRIGHT;
 
@@ -75,10 +80,18 @@ void turnback()
 
 
 void setup() {
+  pinMode(MYPIN, INPUT);
 }
 
 void loop() {
-  if(digitalRead(MYPIN) == LINE) //间隔大于多少毫秒才能判断为下一次路口?
+  if(cnt%3 == 1 && sonar.ping_cm() <= 50){
+      motor.runright(60);
+      motor.runleft(90);
+      delay(500);
+      motor.runright(80);
+      motor.runleft(80);
+  }
+  else if(digitalRead(MYPIN) == ENV) //间隔大于多少毫秒才能判断为下一次路口?
     {
         cnt++;
         //右转
@@ -87,7 +100,7 @@ void loop() {
         motor.runright(60);
         motor.runleft(60);
         int current_time = millis();
-        while((millis() - current_time) > 1000){
+        while((millis() - current_time) < 1000){
           cruise();
           delay(10);
         }  
@@ -97,7 +110,7 @@ void loop() {
         motor.runright(60);
         motor.runleft(60);
         current_time = millis();
-        while((millis() - current_time) > 1000){
+        while((millis() - current_time) < 1000){
           cruise();
           delay(10);
         }  
