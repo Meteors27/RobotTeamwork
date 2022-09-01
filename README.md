@@ -7,3 +7,4 @@ test1.ino 依赖以下库:
 #include <TB6612.h>
 #include <GreyScaleSensor.h>
 ```
+若想要在本地编译程序，需要将上述文件添加到 Arduino IDE 的 library 中。
