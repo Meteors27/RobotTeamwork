@@ -1,3 +1,16 @@
-#define TOUCHED 0
-#define NOT_TOUCHED 1
+#if defined(ARDUINO) && ARDUINO >= 100
+    #include "Arduino.h"
+#else
+    #include "WProgram.h"
+#endif
+#include "CK008.h"
+#include "config.h"
 
+CK008::CK008(int sig) {
+    pinMode(sig, INPUT);
+    pin = sig;
+}
+
+int CK008::detect() {
+    return digitalRead(pin);
+}

@@ -6,13 +6,21 @@
 #else
     #include "WProgram.h"
 
+#define TOUCHED 0
+#define NOT_TOUCHED 1
+
 class CK008 {
     public:
         /* Initialize the touch sensor. */
         CK008(int sig);
 
-        /* Detect the */
+        /* Detect whether the button has been pressed. 
+         * @return TOUCHED / NOT_TOUCHED
+         * @author Kaixuan WANG
+         */
         int detect();
+    private;
+        int pin;
 }
 
 #endif
