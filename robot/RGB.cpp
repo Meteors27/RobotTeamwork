@@ -14,8 +14,8 @@ RGB::RGB(int red, int green, int blue){
     pinMode(blue_pin, OUTPUT);
 }
 
-RGB::set_rgb(int red, int green, int blue){
-    analogWrite(red_light_pin, 255 - red_light_value);
-    analogWrite(green_light_pin, 255 - green_light_value);
-    analogWrite(blue_light_pin, 255 - blue_light_value);
+void RGB::set_rgb(int red, int green, int blue){
+    analogWrite(red_pin, 255 - red);
+    analogWrite(green_pin, 255 - green);
+    analogWrite(blue_pin, 255 - blue);
 }

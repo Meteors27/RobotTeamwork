@@ -4,14 +4,17 @@
 #include <CK008.h>
 #include <RGB.h>
 #include <WhiteScaleSensor.h>
-#include <CK008.h>
 
 #define MYPIN 32
 
 #define TURNRIGHT   1
 #define TURNBACK    2
-#define ENV WHITELINE
-#define LINE BLACKLINE
+
+#define BLACK 1
+#define WHITE 0
+
+#define LINE WHITE
+#define ENV BLACK
 
 #define TRIGGER_PIN  22
 #define ECHO_PIN     23
@@ -21,11 +24,12 @@
 #define FRONT_RIGHT_SENSOR A2
 #define IS_OBSTACLE (cornerCount % 3 == 1 && sonar.ping_cm() <= 50)
 
-
+#define CK008_PIN 23
 
 TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
-GREYSCALESENSOR sensor = GREYSCALESENSOR(FRONT_LEFT_SENSOR, FRONT_MIDDLE_SENSOR, FRONT_RIGHT_SENSOR, 500, LINE);
+GREYSCALESENSOR sensor = GREYSCALESENSOR(FRONT_LEFT_SENSOR, FRONT_MIDDLE_SENSOR, FRONT_RIGHT_SENSOR, 500, BLACK, WHITE);
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+CK008 ck008(CK008_PIN);
 int cornerCount;
 enum RobotMode{
     cruising = 0,
@@ -33,10 +37,10 @@ enum RobotMode{
     obstacle,
     grasping,
     placing,
-};
+} robotmode;
 // int next = TURNRIGHT;
 
-void aviodObstacle(){
+void avoidObstacle(){
     motor.runright(60);
     motor.runleft(90);
     delay(500);
@@ -102,7 +106,7 @@ void turnback(){
 void setup(){
     cornerCount = 0;
     while (1) {
-        if (CK008.detect() == TOUCHED){
+        if (ck008.detect() == TOUCHED){
             break;
         }
         delay(10);
@@ -113,8 +117,8 @@ void setup(){
 
 void loop(){
     if (IS_OBSTACLE){
-        aviodObstacle();
-        RobotMode = cruising;
+        avoidObstacle();
+        robotmode = cruising;
     }
     /* 红外传感器的ENV和LINE常量值是反的
      * 间隔大于多少毫秒才能判断为下一次路口?
@@ -123,16 +127,16 @@ void loop(){
         // Set robot mode.
         switch (cornerCount % 3){
         case 0:
-            RobotMode = cruising;
+            robotmode = cruising;
             break;
         case 1:
-            RobotMode = grasping;
+            robotmode = grasping;
             break;
         case 2:
-            RobotMode = placing;
+            robotmode = placing;
             break;
         }
-        if (RobotMode == cruising){
+        if (robotmode == cruising){
             //在起点处路口不用转
             turnright();
             //向前靠近桌面
@@ -146,13 +150,13 @@ void loop(){
             //掉头
 
             /*
-             if (RobotMode == grasping) {
+             if (robotmode == grasping) {
                 grasp();
-                RobotMode = cruising;
+                robotmode = cruising;
              }
-             else if (RobotMode == placing) {
+             else if (robotmode == placing) {
                 place();
-                RobotMode = placing;
+                robotmode = placing;
              }
 
             */
@@ -172,7 +176,7 @@ void loop(){
         }
         cornerCount++;
     }
-    else if (RobotMode == cruising){
+    else if (robotmode == cruising){
         cruise();
         delay(10);
     }

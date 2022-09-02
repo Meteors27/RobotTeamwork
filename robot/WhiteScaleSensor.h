@@ -7,13 +7,11 @@
     #include "WProgram.h"
 #endif
 
-#define LINE 0
-#define ENV 1
 
 // >= bound indicates black
 class WhiteScaleSensor {
     public:
-        WhiteScaleSensor(int pin);
+        WhiteScaleSensor(int pin, int black, int white);
 
         /* Detect the color below the sensor.
          *@return **LINE / ENV**. LINE indicates black line, ENV indicates white area.
@@ -21,6 +19,8 @@ class WhiteScaleSensor {
         int detect();
     private:
         int pin;
+        int black;
+        int white;
 };
 
 #endif

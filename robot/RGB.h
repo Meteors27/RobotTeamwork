@@ -12,7 +12,7 @@ class RGB{
         RGB(int red, int green, int blue);
 
         /* Set the RGB value. */
-        set_rgb(int red, int green, int blue);
+        void set_rgb(int red, int green, int blue);
     
     private:
         int red_pin;

@@ -7,15 +7,17 @@
 
 #define BOUND 620
 
-WhiteScaleSensor::WhiteScaleSensor(int PIN) {
+WhiteScaleSensor::WhiteScaleSensor(int PIN, int Black, int White) {
     pinMode(PIN, INPUT);
     pin = PIN;
+    black = Black;
+    white = White;
 }
 
 int WhiteScaleSensor::detect() {
     int val = analogRead(pin);
     if (val > BOUND) {
-        return LINE;
+        return black;
     }
-    return ENV;
+    return white;
 }
