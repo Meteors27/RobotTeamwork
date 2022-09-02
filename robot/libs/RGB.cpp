@@ -19,3 +19,7 @@ void RGB::set_rgb(int red, int green, int blue){
     analogWrite(green_pin, 255 - green);
     analogWrite(blue_pin, 255 - blue);
 }
+
+void RGB::twinkle(int red, int green, int blue){
+    
+}

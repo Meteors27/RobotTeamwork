@@ -1,5 +1,6 @@
 {
     "configuration": "cpu=atmega2560",
     "board": "arduino:avr:mega",
-    "sketch": "robot\\robot.ino"
+    "sketch": "robot\\robot.ino",
+    "port": "COM8"
 }

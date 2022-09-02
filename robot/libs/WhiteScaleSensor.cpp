@@ -5,7 +5,7 @@
 #endif
 #include "WhiteScaleSensor.h"
 
-#define BOUND 620
+#define BOUND 350
 
 WhiteScaleSensor::WhiteScaleSensor(int PIN, int Black, int White) {
     pinMode(PIN, INPUT);

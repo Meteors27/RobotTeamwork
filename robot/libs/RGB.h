@@ -13,6 +13,9 @@ class RGB{
 
         /* Set the RGB value. */
         void set_rgb(int red, int green, int blue);
+
+        /* Twinkle in a period of 1s with a particular color. */
+        void twinkle(int red, int green, int blue);
     
     private:
         int red_pin;

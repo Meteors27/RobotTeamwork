@@ -5,7 +5,7 @@
 #include <RGB.h>
 #include <WhiteScaleSensor.h>
 
-#define MYPIN 32
+#define MYPIN A8
 
 #define TURNRIGHT   1
 #define TURNBACK    2
@@ -22,15 +22,17 @@
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 1 && sonar.ping_cm() <= 50)
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() <= 50)
 
-#define CK008_PIN 23
+#define CK008_PIN 43
 
 TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
 GREYSCALESENSOR sensor = GREYSCALESENSOR(FRONT_LEFT_SENSOR, FRONT_MIDDLE_SENSOR, FRONT_RIGHT_SENSOR, 500, BLACK, WHITE);
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 CK008 ck008(CK008_PIN);
 RGB rgb(53, 49, 51);
+WhiteScaleSensor edgeSensor(MYPIN, BLACK, WHITE);
+
 int cornerCount;
 enum RobotMode{
     cruising = 0,
@@ -105,7 +107,7 @@ void turnback(){
 
 
 void setup(){
-    cornerCount = 0;
+    cornerCount = 1;
     int current = millis();
     while (1) {
         if (ck008.detect() == TOUCHED || millis() - current > 10000){
@@ -115,22 +117,19 @@ void setup(){
     }
     pinMode(MYPIN, INPUT);
     rgb.set_rgb(0,0,0);
-    delay(500);
-    rgb.set_rgb(255, 255, 255);
+    robotmode = cruising;
 }
 
 
 void loop(){
-    if (IS_OBSTACLE){
-        rgb.set_rgb(255, 0, 0);
-        avoidObstacle();
-        robotmode = cruising;
-        rgb.set_rgb(0, 0, 0);
-    }
+    
     /* 红外传感器的ENV和LINE常量值是反的
      * 间隔大于多少毫秒才能判断为下一次路口?
      */
-    else if (digitalRead(MYPIN) == ENV){
+    if (edgeSensor.detect() == LINE){
+        rgb.set_rgb(0,200,0);
+        motor.stop();
+        while(1){;}
         // Set robot mode.
         switch (cornerCount % 3){
         case 0:
@@ -146,7 +145,7 @@ void loop(){
             rgb.set_rgb(0,255,255);
             break;
         }
-        if (robotmode == cruising){
+        if (robotmode == grasping || robotmode == placing){
             //在起点处路口不用转
             turnright();
             //向前靠近桌面
@@ -185,6 +184,12 @@ void loop(){
             turnright();
         }
         cornerCount++;
+    }
+    else if (IS_OBSTACLE){
+        rgb.set_rgb(255, 0, 0);
+        avoidObstacle();
+        robotmode = cruising;
+        rgb.set_rgb(0, 0, 0);
     }
     else if (robotmode == cruising){
         cruise();
