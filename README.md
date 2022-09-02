@@ -11,5 +11,4 @@ test1.ino 依赖以下库:
 <GreyScaleSensor.h>
 ```
 
-<<<<<<< HEAD
 若想要在本地编译程序，需要将`robot/libs`添加到 Arduino IDE 的 `libraries` 中。
