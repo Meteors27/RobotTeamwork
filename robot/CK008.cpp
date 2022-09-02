@@ -4,7 +4,6 @@
     #include "WProgram.h"
 #endif
 #include "CK008.h"
-#include "config.h"
 
 CK008::CK008(int sig) {
     pinMode(sig, INPUT);

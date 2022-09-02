@@ -4,7 +4,6 @@
     #include "WProgram.h"
 #endif
 #include "WhiteScaleSensor.h"
-#include "config.h"
 
 #define BOUND 620
 

@@ -14,6 +14,10 @@
 class WhiteScaleSensor {
     public:
         WhiteScaleSensor(int pin);
+
+        /* Detect the color below the sensor.
+         *@return **LINE / ENV**. LINE indicates black line, ENV indicates white area.
+         */
         int detect();
     private:
         int pin;

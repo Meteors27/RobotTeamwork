@@ -3,8 +3,6 @@
 #else
     #include "WProgram.h"
 #endif
-#include "GreyScaleSensor.h"
-#include "config.h"
 
 GREYSCALESENSOR::GREYSCALESENSOR(int left, int middle, int right, int compare, int mode)
 {

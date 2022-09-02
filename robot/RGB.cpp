@@ -4,7 +4,6 @@
 #include "WProgram.h"
 #endif
 #include "RGB.h"
-#include "config.h"
 
 RGB::RGB(int red, int green, int blue){
     red_pin = red;
