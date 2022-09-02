@@ -8,18 +8,33 @@
 #define ENV WHITELINE
 #define LINE BLACKLINE
 
-#define TRIGGER_PIN  22  
+#define TRIGGER_PIN  22
 #define ECHO_PIN     23
 #define MAX_DISTANCE 80
 #define IS_OBSTACLE (cornerCount % 3 == 1 && sonar.ping_cm() <= 50)
 
 
+
 TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
 GREYSCALESENSOR sensor = GREYSCALESENSOR(A0, A1, A2, 500, LINE);
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
-int cornerCount = 0;
+int cornerCount;
+enum RobotMode{
+    cruising = 0,
+    intersetion,
+    obstacle,
+    grasping,
+    placing,
+};
 // int next = TURNRIGHT;
 
+void aviodObstacle(){
+    motor.runright(60);
+    motor.runleft(90);
+    delay(500);
+    motor.runright(80);
+    motor.runleft(80);
+}
 
 void cruise(){
     int LineError;
@@ -46,6 +61,11 @@ void cruise(){
     }
 }
 
+void grasp(){
+    if (cornerCount % 3 == 0){
+
+    }
+}
 
 void turnright(){
     motor.runright(-40);
@@ -72,46 +92,73 @@ void turnback(){
 
 
 void setup(){
+    cornerCount = 0;
     pinMode(MYPIN, INPUT);
 }
 
 
 void loop(){
     if (IS_OBSTACLE){
-        motor.runright(60);
-        motor.runleft(90);
-        delay(500);
-        motor.runright(80);
-        motor.runleft(80);
+        aviodObstacle();
+        RobotMode = cruising;
     }
-    else if (digitalRead(MYPIN) == ENV) //间隔大于多少毫秒才能判断为下一次路口?
-    {
+    /* 红外传感器的ENV和LINE常量值是反的
+     * 间隔大于多少毫秒才能判断为下一次路口?
+     */
+    else if (digitalRead(MYPIN) == ENV){
+        // Set robot mode.
+        switch (cornerCount % 3){
+        case 0:
+            RobotMode = cruising;
+            break;
+        case 1:
+            RobotMode = grasping;
+            break;
+        case 2:
+            RobotMode = placing;
+            break;
+        }
+        if (RobotMode == cruising){
+            //在起点处路口不用转
+            turnright();
+            //向前靠近桌面
+            motor.runright(60);
+            motor.runleft(60);
+            int current_time = millis();
+            while ((millis() - current_time) < 500){
+                cruise();
+                delay(10);
+            }
+            //掉头
+
+            /*
+             if (RobotMode == grasping) {
+                grasp();
+                RobotMode = cruising;
+             }
+             else if (RobotMode == placing) {
+                place();
+                RobotMode = placing;
+             }
+
+            */
+
+
+            //向后远离桌面
+            turnback();
+            motor.runright(60);
+            motor.runleft(60);
+            current_time = millis();
+            while ((millis() - current_time) < 500){
+                cruise();
+                delay(10);
+            }
+            //右转
+            turnright();
+        }
         cornerCount++;
-        //右转
-        turnright();
-        //巡线
-        motor.runright(60);
-        motor.runleft(60);
-        int current_time = millis();
-        while ((millis() - current_time) < 1000){
-            cruise();
-            delay(10);
-        }
-        //掉头
-        /* TODO: Grasping */
-        turnback();
-        //巡线
-        motor.runright(60);
-        motor.runleft(60);
-        current_time = millis();
-        while ((millis() - current_time) < 1000){
-            cruise();
-            delay(10);
-        }
-        //右转
-        turnright();
     }
-    else{
+    else if (RobotMode == cruising){
         cruise();
         delay(10);
     }
