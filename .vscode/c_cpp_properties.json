@@ -17,7 +17,7 @@
             "includePath": [
                 "X:\\arduino\\arduino-nightly\\hardware\\arduino\\avr\\cores\\arduino",
                 "X:\\arduino\\arduino-nightly\\hardware\\arduino\\avr\\variants\\mega",
-                "Y:\\DATA\\Documents\\Arduino\\libraries\\robot",
+                "Y:\\DATA\\Documents\\Arduino\\libraries\\libs",
                 "Y:\\DATA\\Documents\\Arduino\\libraries\\NewPing\\src",
                 "x:\\arduino\\arduino-nightly\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include",
                 "x:\\arduino\\arduino-nightly\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include-fixed",

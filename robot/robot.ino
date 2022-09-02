@@ -13,8 +13,8 @@
 #define BLACK 1
 #define WHITE 0
 
-#define LINE WHITE
-#define ENV BLACK
+#define LINE BLACK
+#define ENV WHITE
 
 #define TRIGGER_PIN  22
 #define ECHO_PIN     23
@@ -30,6 +30,7 @@ TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
 GREYSCALESENSOR sensor = GREYSCALESENSOR(FRONT_LEFT_SENSOR, FRONT_MIDDLE_SENSOR, FRONT_RIGHT_SENSOR, 500, BLACK, WHITE);
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 CK008 ck008(CK008_PIN);
+RGB rgb(53, 49, 51);
 int cornerCount;
 enum RobotMode{
     cruising = 0,
@@ -105,20 +106,26 @@ void turnback(){
 
 void setup(){
     cornerCount = 0;
+    int current = millis();
     while (1) {
-        if (ck008.detect() == TOUCHED){
+        if (ck008.detect() == TOUCHED || millis() - current > 10000){
             break;
         }
         delay(10);
     }
     pinMode(MYPIN, INPUT);
+    rgb.set_rgb(0,0,0);
+    delay(500);
+    rgb.set_rgb(255, 255, 255);
 }
 
 
 void loop(){
     if (IS_OBSTACLE){
+        rgb.set_rgb(255, 0, 0);
         avoidObstacle();
         robotmode = cruising;
+        rgb.set_rgb(0, 0, 0);
     }
     /* 红外传感器的ENV和LINE常量值是反的
      * 间隔大于多少毫秒才能判断为下一次路口?
@@ -128,12 +135,15 @@ void loop(){
         switch (cornerCount % 3){
         case 0:
             robotmode = cruising;
+            rgb.set_rgb(0,0,0);
             break;
         case 1:
             robotmode = grasping;
+            rgb.set_rgb(255,255,0);
             break;
         case 2:
             robotmode = placing;
+            rgb.set_rgb(0,255,255);
             break;
         }
         if (robotmode == cruising){
