@@ -5,6 +5,7 @@
     #include "Arduino.h"
 #else
     #include "WProgram.h"
+#endif
 
 #define TOUCHED 0
 #define NOT_TOUCHED 1
@@ -19,8 +20,8 @@ class CK008 {
          * @author Kaixuan WANG
          */
         int detect();
-    private;
+    private:
         int pin;
-}
+};
 
 #endif

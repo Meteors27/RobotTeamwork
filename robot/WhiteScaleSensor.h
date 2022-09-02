@@ -21,6 +21,6 @@ class WhiteScaleSensor {
         int detect();
     private:
         int pin;
-}
+};
 
 #endif

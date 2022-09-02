@@ -18,6 +18,6 @@ class RGB{
         int red_pin;
         int blue_pin;
         int green_pin;
-}
+};
 
 #endif

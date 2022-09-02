@@ -2,6 +2,7 @@
 #include <GreyScaleSensor.h>
 #include <NewPing.h>
 #include <CK008.h>
+#include <RGB.h>
 #define MYPIN 32
 
 #define TURNRIGHT   1
