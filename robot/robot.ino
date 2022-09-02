@@ -3,6 +3,9 @@
 #include <NewPing.h>
 #include <CK008.h>
 #include <RGB.h>
+#include <WhiteScaleSensor.h>
+#include <CK008.h>
+
 #define MYPIN 32
 
 #define TURNRIGHT   1
@@ -98,6 +101,12 @@ void turnback(){
 
 void setup(){
     cornerCount = 0;
+    while (1) {
+        if (CK008.detect() == TOUCHED){
+            break;
+        }
+        delay(10);
+    }
     pinMode(MYPIN, INPUT);
 }
 
