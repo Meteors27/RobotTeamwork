@@ -11,7 +11,7 @@ class CK008 {
         /* Initialize the touch sensor. */
         CK008(int sig);
 
-        /* Detect the 
+        /* Detect the */
         int detect();
 }
 
