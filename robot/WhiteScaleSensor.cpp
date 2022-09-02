@@ -9,6 +9,7 @@
 #define BOUND 620
 
 WhiteScaleSensor::WhiteScaleSensor(int PIN) {
+    pinMode(PIN, INPUT);
     pin = PIN;
 }
 
