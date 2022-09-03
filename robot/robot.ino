@@ -49,8 +49,13 @@ void avoidObstacle(){
     motor.runright(60);
     motor.runleft(90);
     delay(500);
-    motor.runright(90);
-    motor.runleft(65);
+    motor.runright(80);
+    motor.runleft(74);
+    while(sensor.judgeM() != LINE)
+    {
+        ;
+    }
+    rgb.set_rgb(0, 255, 0);
     //期望其能够斜着上线，后面直接用循迹
 }
 
@@ -206,18 +211,18 @@ void loop(){
         rgb.set_rgb(255, 255, 255);
     }
     else if (IS_OBSTACLE){
-    rgb.set_rgb(255, 0, 0);
-    // avoidObstacle过程中亮红灯
-    avoidObstacle();
-    rgb.set_rgb(0, 0, 255);
-    // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
-    force_cruise(2500, cruise);
-    robotmode = cruising;
-    rgb.set_rgb(255, 255, 255);
+        rgb.set_rgb(255, 0, 0);
+        // avoidObstacle过程中亮红灯
+        avoidObstacle();
+        rgb.set_rgb(0, 0, 255);
+        // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
+        force_cruise(2500, cruise);
+        robotmode = cruising;
+        rgb.set_rgb(255, 255, 255);
     }
     else{
-    cruise();
-    delay(10);
+        cruise();
+        delay(10);
     }
 
 }
