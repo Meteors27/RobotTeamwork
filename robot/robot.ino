@@ -21,7 +21,7 @@
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() > 0)
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0)
 
 #define CK008_PIN 43
 
@@ -198,11 +198,10 @@ void loop(){
         }
         turnleft();
 
-        // current_time = millis();
-        // //这段唯一的作用就是避免超声波传感器收到干扰
-        // while ((millis() - current_time) < 1500){
-        //     cruise();
-        // }
+
+        // avoid redundant increment to cornerCount
+        // otherwise it will get intcremented after the call to turnleft() in the loop()
+        force_cruise(500, cruise_slowly);
         robotmode = cruising;
         rgb.set_rgb(255, 255, 255);
     }
