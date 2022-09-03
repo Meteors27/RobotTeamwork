@@ -21,7 +21,7 @@
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() < 80)
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() > 0)
 
 #define CK008_PIN 43
 
@@ -29,7 +29,7 @@ TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
 GREYSCALESENSOR sensor = GREYSCALESENSOR(FRONT_LEFT_SENSOR, FRONT_MIDDLE_SENSOR, FRONT_RIGHT_SENSOR, 500, BLACK, WHITE);
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 CK008 ck008(CK008_PIN);
-RGB rgb(53, 49, 51);
+RGB rgb(37, 33, 35);
 WhiteScaleSensor edgeSensor(MYPIN, BLACK, WHITE);
 
 int cornerCount;
@@ -79,7 +79,6 @@ void cruise(){
     }
 }
 
-
 void cruise_slowly(){
     int LineError;
     LineError = sensor.detect();
@@ -121,7 +120,6 @@ void turnright(){
     }
 }
 
-
 void turnleft(){
     motor.runright(40);
     motor.runleft(-40);
@@ -131,7 +129,6 @@ void turnleft(){
         if (flag && sensor.judgeM() == LINE) break;
     }
 }
-
 
 void setup(){
     cornerCount = 1;
@@ -147,6 +144,14 @@ void setup(){
     robotmode = cruising;
 }
 
+/** Cruise the specified type for speified time (in millisecond). */
+void force_cruise(int time, void cruise_type()) {
+    int current = millis();
+    while (millis() - current < time) {
+        cruise_type();
+        delay(10);
+    }
+}
 
 void loop(){
 
@@ -171,11 +176,7 @@ void loop(){
         turnright();
         motor.runright(50);
         motor.runleft(50);
-        int current_time = millis();
-        while ((millis() - current_time) < 500){
-            cruise_slowly();
-            delay(10);
-        }
+        force_cruise(500, cruise_slowly);
 
         /*
          if (robotmode == grasping) {
@@ -191,7 +192,7 @@ void loop(){
 
         motor.runleft(-50);
         motor.runright(-50);
-        current_time = millis();
+        int current_time = millis();
         while ((millis() - current_time) < 500){
             ;
         }
@@ -211,11 +212,7 @@ void loop(){
     avoidObstacle();
     rgb.set_rgb(0, 0, 255);
     // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
-    int current_time = millis();
-    while ((millis() - current_time) < 2500){
-        cruise();
-        delay(10);
-    }
+    force_cruise(2500, cruise);
     robotmode = cruising;
     rgb.set_rgb(255, 255, 255);
     }
@@ -223,4 +220,5 @@ void loop(){
     cruise();
     delay(10);
     }
+
 }
