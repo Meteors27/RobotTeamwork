@@ -17,7 +17,7 @@
 #define MYPIN A9
 #define TRIGGER_PIN  (23)
 #define ECHO_PIN     (22)
-#define MAX_DISTANCE (85)
+#define MAX_DISTANCE (100)
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
@@ -48,7 +48,7 @@ enum RobotMode{
 void avoidObstacle(){
     motor.runright(60);
     motor.runleft(90);
-    delay(600);
+    delay(700);
     motor.runright(80);
     motor.runleft(74);
     while (sensor.judgeM() != LINE){
