@@ -59,6 +59,31 @@ void avoidObstacle(){
     //期望其能够斜着上线，后面直接用循迹
 }
 
+void cruise_strictly(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(60);
+        motor.runleft(60);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(0);
+        motor.runleft(60);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(-10);
+        motor.runleft(60);
+    }
+    else if (LineError == LEFT){
+        motor.runright(60);
+        motor.runleft(0);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(60);
+        motor.runleft(-10);
+    }
+}
+
 void cruise(){
     int LineError;
     LineError = sensor.detect();
@@ -216,6 +241,7 @@ void loop(){
         avoidObstacle();
         rgb.set_rgb(0, 0, 255);
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
+        force_cruise(1000, cruise_strictly);
         force_cruise(2500, cruise);
         robotmode = cruising;
         rgb.set_rgb(255, 255, 255);
