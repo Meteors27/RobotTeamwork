@@ -165,65 +165,62 @@ void loop(){
             rgb.set_rgb(0, 255, 255);
             break;
         }
-        if (robotmode == grasping || robotmode == placing){
-            turnright();
-            motor.runright(50);
-            motor.runleft(50);
-            int current_time = millis();
-            while ((millis() - current_time) < 500){
-                cruise_slowly();
-                delay(10);
-            }
-
-            /*
-             if (robotmode == grasping) {
-                grasp();
-                robotmode = grasping;
-             }
-             else if (robotmode == placing) {
-                place();
-                robotmode = placing;
-             }
-
-            */
-
-            motor.runleft(-50);
-            motor.runright(-50);
-            current_time = millis();
-            while ((millis() - current_time) < 500){
-                ;
-            }
-            turnleft();
-
-            // current_time = millis();
-            // //这段唯一的作用就是避免超声波传感器收到干扰
-            // while ((millis() - current_time) < 1500){
-            //     cruise();
-            // }
-            robotmode = cruising;
-            rgb.set_rgb(255, 255, 255);
-
-        }
         cornerCount++;
     }
-    else if (IS_OBSTACLE){
-        rgb.set_rgb(255, 0, 0);
-        // avoidObstacle过程中亮红灯
-        avoidObstacle();
-        rgb.set_rgb(0, 0, 255);
-        // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
+    if (robotmode == grasping || robotmode == placing){
+        turnright();
+        motor.runright(50);
+        motor.runleft(50);
         int current_time = millis();
-        while ((millis() - current_time) < 2500){
-            cruise();
+        while ((millis() - current_time) < 500){
+            cruise_slowly();
             delay(10);
         }
+
+        /*
+         if (robotmode == grasping) {
+            grasp();
+            robotmode = grasping;
+         }
+         else if (robotmode == placing) {
+            place();
+            robotmode = placing;
+         }
+
+        */
+
+        motor.runleft(-50);
+        motor.runright(-50);
+        current_time = millis();
+        while ((millis() - current_time) < 500){
+            ;
+        }
+        turnleft();
+
+        // current_time = millis();
+        // //这段唯一的作用就是避免超声波传感器收到干扰
+        // while ((millis() - current_time) < 1500){
+        //     cruise();
+        // }
         robotmode = cruising;
         rgb.set_rgb(255, 255, 255);
     }
-    else{
+    else if (IS_OBSTACLE){
+    rgb.set_rgb(255, 0, 0);
+    // avoidObstacle过程中亮红灯
+    avoidObstacle();
+    rgb.set_rgb(0, 0, 255);
+    // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
+    int current_time = millis();
+    while ((millis() - current_time) < 2500){
         cruise();
         delay(10);
     }
+    robotmode = cruising;
+    rgb.set_rgb(255, 255, 255);
+    }
+    else{
+    cruise();
+    delay(10);
+    }
 }
-// issue: ExtraRight 判断之后转向过程中是不是可能产生意料之外的对ExtraLeft的误判，导致超声波传感器的触发时机不正确？
-// 进去取物品再出来，cornerCount加了多少
