@@ -21,7 +21,7 @@
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0)//TODO
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 5&&sonar.ping_cm()<75)//TODO
 
 #define CK008_PIN 43
 
@@ -78,6 +78,32 @@ void cruise(){
         motor.runleft(0);
     }
 }
+
+void cruise_down_hill(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(30);
+        motor.runleft(30);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(0);
+        motor.runleft(30);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(-10);
+        motor.runleft(30);
+    }
+    else if (LineError == LEFT){
+        motor.runright(30);
+        motor.runleft(0);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(30);
+        motor.runleft(-10);
+    }
+}
+
 
 void cruise_slowly(){
     int LineError;
@@ -189,9 +215,12 @@ void loop(){
 
             current_time = millis();
             rgb.set_rgb(255, 255, 255);
-            while ((millis() - current_time) < 3000){
+            rgb.set_rgb(0,128,128);
+
+            while ((millis() - current_time) < 1500){
                 cruise();
             }
+            rgb.set_rgb(255,255,255);
 
             /*
              if (robotmode == grasping) {
@@ -204,18 +233,17 @@ void loop(){
              }
 
             */
+           robotmode = cruising;
         }
         cornerCount++;
     }
     else if (IS_OBSTACLE){
         rgb.set_rgb(255, 0, 0);
         avoidObstacle();
+        delay(100);
         rgb.set_rgb(128, 128, 128);
-        while (sensor.judgeM() == ENV) {
-            ;
-        }
         int current_time = millis();
-        while (millis() - current_time < 1000) {
+        while ((millis() - current_time) < 2500) {
             cruise();
             delay(10);
         }
@@ -223,7 +251,7 @@ void loop(){
         rgb.set_rgb(255, 255, 255);
 
     }
-    else if (robotmode == cruising){
+    else{
         cruise();
         delay(10);
     }
