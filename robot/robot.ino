@@ -33,6 +33,7 @@ RGB rgb(53, 49, 51);
 WhiteScaleSensor edgeSensor(MYPIN, BLACK, WHITE);
 
 int cornerCount;
+
 enum RobotMode{
     cruising = 0,
     intersetion,
@@ -42,6 +43,8 @@ enum RobotMode{
 } robotmode;
 // int next = TURNRIGHT;
 
+
+//TODO
 void avoidObstacle(){
     motor.runright(60);
     motor.runleft(90);
@@ -154,7 +157,7 @@ void loop(){
         switch (cornerCount % 3){
         case 0:
             robotmode = cruising;
-            rgb.set_rgb(0,0,0);
+            rgb.set_rgb(255, 255, 255);
             break;
         case 1:
             robotmode = grasping;
@@ -166,9 +169,7 @@ void loop(){
             break;
         }
         if (robotmode == grasping || robotmode == placing){
-            //在起点处路口不用转
             turnright();
-            //向前靠近桌面
             motor.runright(50);
             motor.runleft(50);
             int current_time = millis();
@@ -176,7 +177,6 @@ void loop(){
                 cruise_slowly();
                 delay(10);
             }
-
             
             motor.runleft(-50);
             motor.runright(-50);
@@ -187,6 +187,7 @@ void loop(){
             turnleft();
 
             current_time = millis();
+            rgb.set_rgb(255, 255, 255);
             while((millis() - current_time) < 1000){
                 cruise();
             }
@@ -202,9 +203,6 @@ void loop(){
              }
 
             */
-
-
-            //向后远离桌面
         }
         cornerCount++;
     }
