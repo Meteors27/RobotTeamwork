@@ -15,13 +15,13 @@
 #define ENV WHITE
 
 #define MYPIN A8
-#define TRIGGER_PIN  22
-#define ECHO_PIN     23
-#define MAX_DISTANCE 50
+#define TRIGGER_PIN  (22)
+#define ECHO_PIN     (23)
+#define MAX_DISTANCE (80)
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() <= 50)
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0)
 
 #define CK008_PIN 43
 
