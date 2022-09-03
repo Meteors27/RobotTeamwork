@@ -14,7 +14,7 @@
 #define LINE BLACK
 #define ENV WHITE
 
-#define MYPIN A8
+#define MYPIN A9
 #define TRIGGER_PIN  (23)
 #define ECHO_PIN     (22)
 #define MAX_DISTANCE (80)
@@ -48,7 +48,7 @@ enum RobotMode{
 void avoidObstacle(){
     motor.runright(60);
     motor.runleft(90);
-    delay(500);
+    delay(600);
     motor.runright(80);
     motor.runleft(74);
     while(sensor.judgeM() != LINE)
