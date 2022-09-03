@@ -32,6 +32,6 @@ void WhiteScaleSensor::disable() {
     able = false;
 }
 
-void WhiteScaleSensor::isable() {
+bool WhiteScaleSensor::isable() {
     return able;
 }

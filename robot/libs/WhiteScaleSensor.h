@@ -22,7 +22,7 @@ class WhiteScaleSensor {
         
         void disable();
 
-        void isable();
+        bool isable();
 
     private:
         int pin;
