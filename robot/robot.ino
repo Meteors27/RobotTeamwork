@@ -55,7 +55,7 @@ void avoidObstacle(){
     {
         ;
     }
-    rgb.set_rgb(0, 255, 0);
+    rgb.green();
     //期望其能够斜着上线，后面直接用循迹
 }
 
@@ -170,7 +170,7 @@ void setup(){
         delay(10);
     }
     pinMode(MYPIN, INPUT);
-    rgb.set_rgb(255, 255, 255);
+    rgb.white();
     robotmode = cruising;
 }
 
@@ -189,15 +189,15 @@ void loop(){
         switch (cornerCount % 3){
         case 0:
             robotmode = cruising;
-            rgb.set_rgb(255, 255, 255);
+            rgb.white();
             break;
         case 1:
             robotmode = grasping;
-            rgb.set_rgb(255, 255, 0);
+            rgb.yellow();
             break;
         case 2:
             robotmode = placing;
-            rgb.set_rgb(0, 255, 255);
+            rgb.cyan();
             break;
         }
         cornerCount++;
@@ -233,18 +233,18 @@ void loop(){
         // otherwise it will get intcremented after the call to turnleft() in the loop()
         force_cruise(500, cruise_slowly);
         robotmode = cruising;
-        rgb.set_rgb(255, 255, 255);
+        rgb.white();
     }
     else if (IS_OBSTACLE){
-        rgb.set_rgb(255, 0, 0);
+        rgb.red();
         // avoidObstacle过程中亮红灯
         avoidObstacle();
-        rgb.set_rgb(0, 0, 255);
+        rgb.blue();
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
         force_cruise(1000, cruise_strictly);
         force_cruise(2500, cruise);
         robotmode = cruising;
-        rgb.set_rgb(255, 255, 255);
+        rgb.white();
     }
     else{
         cruise();

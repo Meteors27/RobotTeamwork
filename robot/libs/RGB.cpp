@@ -20,6 +20,34 @@ void RGB::set_rgb(int red, int green, int blue){
     analogWrite(blue_pin, 255 - blue);
 }
 
-void RGB::twinkle(int red, int green, int blue){
-    
+void RGB::white(){
+    set_rgb(255, 255, 255);
+}
+
+void RGB::red(){
+    set_rgb(255, 0, 0);
+}
+
+void RGB::blue(){
+    set_rgb(0, 0, 255);
+}
+
+void RGB::green(){
+    set_rgb(0, 255, 0);
+}
+
+void RGB::magenta(){
+    set_rgb(255, 0, 255);
+}
+
+void RGB::cyan(){
+    set_rgb(0, 255, 255);
+}
+
+void RGB::turnoff(){
+    set_rgb(0, 0, 0);
+}
+
+void RGB::yellow(){
+    set_rgb(255, 255, 0);
 }
