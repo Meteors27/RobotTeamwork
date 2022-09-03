@@ -79,6 +79,32 @@ void cruise(){
     }
 }
 
+void cruise_down_hill(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(30);
+        motor.runleft(30);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(0);
+        motor.runleft(30);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(-10);
+        motor.runleft(30);
+    }
+    else if (LineError == LEFT){
+        motor.runright(30);
+        motor.runleft(0);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(30);
+        motor.runleft(-10);
+    }
+}
+
+
 void cruise_slowly(){
     int LineError;
     LineError = sensor.detect();
@@ -190,7 +216,8 @@ void loop(){
             current_time = millis();
             rgb.set_rgb(255, 255, 255);
             rgb.set_rgb(0,128,128);
-            while ((millis() - current_time) < 3000){
+
+            while ((millis() - current_time) < 1500){
                 cruise();
             }
             rgb.set_rgb(255,255,255);
@@ -206,6 +233,7 @@ void loop(){
              }
 
             */
+           robotmode = cruising;
         }
         cornerCount++;
     }
@@ -223,7 +251,7 @@ void loop(){
         rgb.set_rgb(255, 255, 255);
 
     }
-    else if (robotmode == cruising){
+    else{
         cruise();
         delay(10);
     }
