@@ -24,11 +24,14 @@ class WhiteScaleSensor {
 
         bool isable();
 
+        int get_disable_time();
+
     private:
         int pin;
         int black;
         int white;
         bool able;
+        int disable_time;
 };
 
 #endif

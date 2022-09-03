@@ -30,6 +30,11 @@ void WhiteScaleSensor::enable() {
 
 void WhiteScaleSensor::disable() {
     able = false;
+    disable_time = millis();
+}
+
+int WhiteScaleSensor::get_disable_time() {
+    return disable_time;
 }
 
 bool WhiteScaleSensor::isable() {
