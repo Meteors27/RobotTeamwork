@@ -21,7 +21,7 @@
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 5&&sonar.ping_cm()<75)//TODO
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() < 80)
 
 #define CK008_PIN 43
 
@@ -46,12 +46,12 @@ enum RobotMode{
 
 //TODO
 void avoidObstacle(){
-    edgeSensor.disable();
     motor.runright(60);
     motor.runleft(90);
     delay(500);
     motor.runright(80);
-    motor.runleft(80);
+    motor.runleft(70);
+    //期望其能够斜着上线，后面直接用循迹
 }
 
 void cruise(){
@@ -76,31 +76,6 @@ void cruise(){
     else if (LineError == EXTRALEFT){
         motor.runright(90);
         motor.runleft(0);
-    }
-}
-
-void cruise_down_hill(){
-    int LineError;
-    LineError = sensor.detect();
-    if (LineError == STRAIGHT){
-        motor.runright(30);
-        motor.runleft(30);
-    }
-    else if (LineError == RIGHT){
-        motor.runright(0);
-        motor.runleft(30);
-    }
-    else if (LineError == EXTRARIGHT){
-        motor.runright(-10);
-        motor.runleft(30);
-    }
-    else if (LineError == LEFT){
-        motor.runright(30);
-        motor.runleft(0);
-    }
-    else if (LineError == EXTRALEFT){
-        motor.runright(30);
-        motor.runleft(-10);
     }
 }
 
@@ -175,12 +150,7 @@ void setup(){
 
 void loop(){
 
-    /* 红外传感器的ENV和LINE常量值是反的
-     * 间隔大于多少毫秒才能判断为下一次路口?
-     */
     if (edgeSensor.detect() == LINE){
-        rgb.set_rgb(0, 200, 0);
-        // Set robot mode.
         switch (cornerCount % 3){
         case 0:
             robotmode = cruising;
@@ -205,6 +175,18 @@ void loop(){
                 delay(10);
             }
 
+            /*
+             if (robotmode == grasping) {
+                grasp();
+                robotmode = grasping;
+             }
+             else if (robotmode == placing) {
+                place();
+                robotmode = placing;
+             }
+
+            */
+
             motor.runleft(-50);
             motor.runright(-50);
             current_time = millis();
@@ -213,43 +195,30 @@ void loop(){
             }
             turnleft();
 
-            current_time = millis();
+            // current_time = millis();
+            // //这段唯一的作用就是避免超声波传感器收到干扰
+            // while ((millis() - current_time) < 1500){
+            //     cruise();
+            // }
+            robotmode = cruising;
             rgb.set_rgb(255, 255, 255);
-            rgb.set_rgb(0,128,128);
 
-            while ((millis() - current_time) < 1500){
-                cruise();
-            }
-            rgb.set_rgb(255,255,255);
-
-            /*
-             if (robotmode == grasping) {
-                grasp();
-                robotmode = cruising;
-             }
-             else if (robotmode == placing) {
-                place();
-                robotmode = placing;
-             }
-
-            */
-           robotmode = cruising;
         }
         cornerCount++;
     }
     else if (IS_OBSTACLE){
         rgb.set_rgb(255, 0, 0);
+        // avoidObstacle过程中亮红灯
         avoidObstacle();
-        delay(100);
-        rgb.set_rgb(128, 128, 128);
+        rgb.set_rgb(0, 0, 255);
+        // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
         int current_time = millis();
-        while ((millis() - current_time) < 2500) {
+        while ((millis() - current_time) < 2500){
             cruise();
             delay(10);
         }
         robotmode = cruising;
         rgb.set_rgb(255, 255, 255);
-
     }
     else{
         cruise();
