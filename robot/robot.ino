@@ -17,7 +17,7 @@
 #define MYPIN A9
 #define TRIGGER_PIN  (23)
 #define ECHO_PIN     (22)
-#define MAX_DISTANCE (80)
+#define MAX_DISTANCE (85)
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
