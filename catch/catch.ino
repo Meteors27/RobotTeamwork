@@ -15,7 +15,7 @@ void loop()
   
   rotate(60);
   delay(1500);
-  rotate(95);
+  rotate(90);
   delay(2000);
 
   upperang(120);
