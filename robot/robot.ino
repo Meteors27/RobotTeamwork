@@ -21,7 +21,7 @@
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0)//TODO
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 5&&sonar.ping_cm()<75)//TODO
 
 #define CK008_PIN 43
 
@@ -189,9 +189,11 @@ void loop(){
 
             current_time = millis();
             rgb.set_rgb(255, 255, 255);
+            rgb.set_rgb(0,128,128);
             while ((millis() - current_time) < 3000){
                 cruise();
             }
+            rgb.set_rgb(255,255,255);
 
             /*
              if (robotmode == grasping) {
@@ -210,12 +212,10 @@ void loop(){
     else if (IS_OBSTACLE){
         rgb.set_rgb(255, 0, 0);
         avoidObstacle();
+        delay(100);
         rgb.set_rgb(128, 128, 128);
-        while (sensor.judgeM() == ENV) {
-            ;
-        }
         int current_time = millis();
-        while (millis() - current_time < 1000) {
+        while ((millis() - current_time) < 2500) {
             cruise();
             delay(10);
         }
