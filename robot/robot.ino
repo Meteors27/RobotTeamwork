@@ -15,13 +15,13 @@
 #define ENV WHITE
 
 #define MYPIN A8
-#define TRIGGER_PIN  (22)
-#define ECHO_PIN     (23)
+#define TRIGGER_PIN  (23)
+#define ECHO_PIN     (22)
 #define MAX_DISTANCE (80)
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0)
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() > 0)
 
 #define CK008_PIN 43
 
@@ -49,8 +49,8 @@ void avoidObstacle(){
     motor.runright(60);
     motor.runleft(90);
     delay(500);
-    motor.runright(80);
-    motor.runleft(70);
+    motor.runright(90);
+    motor.runleft(65);
     //期望其能够斜着上线，后面直接用循迹
 }
 
