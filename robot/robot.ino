@@ -141,7 +141,7 @@ void setup(){
         delay(10);
     }
     pinMode(MYPIN, INPUT);
-    rgb.set_rgb(0,0,0);
+    rgb.set_rgb(255, 255, 255);
     robotmode = cruising;
 }
 
@@ -188,7 +188,7 @@ void loop(){
 
             current_time = millis();
             rgb.set_rgb(255, 255, 255);
-            while((millis() - current_time) < 1000){
+            while((millis() - current_time) < 3000){
                 cruise();
             }
 
@@ -210,7 +210,7 @@ void loop(){
         rgb.set_rgb(255, 0, 0);
         avoidObstacle();
         robotmode = cruising;
-        rgb.set_rgb(0, 0, 0);
+        rgb.set_rgb(255, 255, 255);
     }
     else if (robotmode == cruising){
         cruise();
