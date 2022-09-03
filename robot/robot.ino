@@ -51,8 +51,7 @@ void avoidObstacle(){
     delay(600);
     motor.runright(80);
     motor.runleft(74);
-    while(sensor.judgeM() != LINE)
-    {
+    while (sensor.judgeM() != LINE){
         ;
     }
     rgb.green();
@@ -140,6 +139,31 @@ void grasp(){
     }
 }
 
+void sprint(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(110);
+        motor.runleft(110);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(30);
+        motor.runleft(110);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(0);
+        motor.runleft(110);
+    }
+    else if (LineError == LEFT){
+        motor.runright(110);
+        motor.runleft(30);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(110);
+        motor.runleft(0);
+    }
+}
+
 void turnright(){
     motor.runright(-40);
     motor.runleft(40);
@@ -175,9 +199,9 @@ void setup(){
 }
 
 /** Cruise the specified type for speified time (in millisecond). */
-void force_cruise(int time, void cruise_type()) {
+void force_cruise(int time, void cruise_type()){
     int current = millis();
-    while (millis() - current < time) {
+    while (millis() - current < time){
         cruise_type();
         delay(10);
     }
