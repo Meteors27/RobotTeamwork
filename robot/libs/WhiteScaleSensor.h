@@ -17,10 +17,18 @@ class WhiteScaleSensor {
          *@return **LINE / ENV**. LINE indicates black line, ENV indicates white area.
          */
         int detect();
+
+        void enable();
+        
+        void disable();
+
+        void isable();
+
     private:
         int pin;
         int black;
         int white;
+        bool able;
 };
 
 #endif

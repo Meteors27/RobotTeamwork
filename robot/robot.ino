@@ -21,7 +21,7 @@
 #define FRONT_LEFT_SENSOR A0
 #define FRONT_MIDDLE_SENSOR A1
 #define FRONT_RIGHT_SENSOR A2
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0)
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0)//TODO
 
 #define CK008_PIN 43
 
@@ -46,6 +46,7 @@ enum RobotMode{
 
 //TODO
 void avoidObstacle(){
+    edgeSensor.disable();
     motor.runright(60);
     motor.runleft(90);
     delay(500);
@@ -134,7 +135,7 @@ void turnleft(){
 void setup(){
     cornerCount = 1;
     int current = millis();
-    while (1) {
+    while (1){
         if (ck008.detect() == TOUCHED || millis() - current > 10000){
             break;
         }
@@ -147,12 +148,12 @@ void setup(){
 
 
 void loop(){
-    
+
     /* 红外传感器的ENV和LINE常量值是反的
      * 间隔大于多少毫秒才能判断为下一次路口?
      */
     if (edgeSensor.detect() == LINE){
-        rgb.set_rgb(0,200,0);
+        rgb.set_rgb(0, 200, 0);
         // Set robot mode.
         switch (cornerCount % 3){
         case 0:
@@ -161,11 +162,11 @@ void loop(){
             break;
         case 1:
             robotmode = grasping;
-            rgb.set_rgb(255,255,0);
+            rgb.set_rgb(255, 255, 0);
             break;
         case 2:
             robotmode = placing;
-            rgb.set_rgb(0,255,255);
+            rgb.set_rgb(0, 255, 255);
             break;
         }
         if (robotmode == grasping || robotmode == placing){
@@ -177,7 +178,7 @@ void loop(){
                 cruise_slowly();
                 delay(10);
             }
-            
+
             motor.runleft(-50);
             motor.runright(-50);
             current_time = millis();
@@ -188,7 +189,7 @@ void loop(){
 
             current_time = millis();
             rgb.set_rgb(255, 255, 255);
-            while((millis() - current_time) < 3000){
+            while ((millis() - current_time) < 3000){
                 cruise();
             }
 
@@ -209,8 +210,18 @@ void loop(){
     else if (IS_OBSTACLE){
         rgb.set_rgb(255, 0, 0);
         avoidObstacle();
+        rgb.set_rgb(128, 128, 128);
+        while (sensor.judgeM() == ENV) {
+            ;
+        }
+        int current_time = millis();
+        while (millis() - current_time < 1000) {
+            cruise();
+            delay(10);
+        }
         robotmode = cruising;
         rgb.set_rgb(255, 255, 255);
+
     }
     else if (robotmode == cruising){
         cruise();

@@ -12,12 +12,26 @@ WhiteScaleSensor::WhiteScaleSensor(int PIN, int Black, int White) {
     pin = PIN;
     black = Black;
     white = White;
+    able = true;
 }
 
 int WhiteScaleSensor::detect() {
+    if (!able) return white;
     int val = analogRead(pin);
     if (val > BOUND) {
         return black;
     }
     return white;
+}
+
+void WhiteScaleSensor::enable() {
+    able = true;
+}
+
+void WhiteScaleSensor::disable() {
+    able = false;
+}
+
+void WhiteScaleSensor::isable() {
+    return able;
 }
