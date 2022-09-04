@@ -182,8 +182,14 @@ void turnleft(){
     motor.runleft(-40);
     int flag = 0;
     while (1){
-        if (!flag && sensor.judgeR() == ENV) flag = 1;
-        if (flag && sensor.judgeM() == LINE) break;
+        if (!flag && sensor.judgeR() == ENV) {
+            flag = 1;
+            delay(100);
+        }
+        if (flag && sensor.judgeR() == LINE) {
+            delay(100);
+            break;
+        }
     }
 }
 
