@@ -14,7 +14,8 @@
 #define LINE BLACK
 #define ENV WHITE
 
-#define MYPIN A9
+#define WHITE_SENSOR_BOUND (400)
+#define EDGE_PIN (A9)
 #define TRIGGER_PIN  (23)
 #define ECHO_PIN     (22)
 #define MAX_DISTANCE (100)
@@ -30,7 +31,7 @@ GREYSCALESENSOR sensor = GREYSCALESENSOR(FRONT_LEFT_SENSOR, FRONT_MIDDLE_SENSOR,
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 CK008 ck008(CK008_PIN);
 RGB rgb(37, 33, 35);
-WhiteScaleSensor edgeSensor(MYPIN, BLACK, WHITE);
+WhiteScaleSensor edgeSensor(EDGE_PIN, BLACK, WHITE, WHITE_SENSOR_BOUND);
 
 int cornerCount;
 
@@ -193,7 +194,7 @@ void setup(){
         }
         delay(10);
     }
-    pinMode(MYPIN, INPUT);
+    pinMode(EDGE_PIN, INPUT);
     rgb.white();
     robotmode = cruising;
 }
@@ -231,7 +232,11 @@ void loop(){
         motor.runright(50);
         motor.runleft(50);
         force_cruise(500, cruise_slowly);
-
+        
+        // for testing
+        motor.stop();
+        rgb.turnoff();
+        while(1);
         /*
          if (robotmode == grasping) {
             grasp();

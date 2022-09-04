@@ -22,7 +22,7 @@
 
 #define CK008_PIN 43
 
-WhiteScaleSensor edgeSensor(MYPIN, BLACK, WHITE);
+WhiteScaleSensor edgeSensor(EDGE_PIN, BLACK, WHITE);
 RGB rgb(53, 49, 51);
 int val;
 

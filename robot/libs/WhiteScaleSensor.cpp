@@ -5,20 +5,19 @@
 #endif
 #include "WhiteScaleSensor.h"
 
-#define BOUND 350
-
-WhiteScaleSensor::WhiteScaleSensor(int PIN, int Black, int White) {
+WhiteScaleSensor::WhiteScaleSensor(int PIN, int Black, int White, int Bound) {
     pinMode(PIN, INPUT);
     pin = PIN;
     black = Black;
     white = White;
     able = true;
+    bound = Bound;
 }
 
 int WhiteScaleSensor::detect() {
     if (!able) return white;
     int val = analogRead(pin);
-    if (val > BOUND) {
+    if (val > bound) {
         return black;
     }
     return white;

@@ -11,7 +11,7 @@
 // >= bound indicates black
 class WhiteScaleSensor {
     public:
-        WhiteScaleSensor(int pin, int black, int white);
+        WhiteScaleSensor(int pin, int black, int white, int Bound);
 
         /* Detect the color below the sensor.
          *@return **LINE / ENV**. LINE indicates black line, ENV indicates white area.
@@ -32,6 +32,7 @@ class WhiteScaleSensor {
         int white;
         bool able;
         int disable_time;
+        int bound;
 };
 
 #endif
