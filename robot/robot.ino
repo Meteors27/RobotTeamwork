@@ -168,25 +168,15 @@ void sprint(){
 }
 
 void turnright(){
-    motor.runright(-40);
-    motor.runleft(70);
-    delay(500);
+    motor.runright(-70);
+    motor.runleft(40);
+    delay(1000);
 }
 
 void turnleft(){
-    motor.runright(70);
-    motor.runleft(-40);
-    int flag = 0;
-    while (1){
-        if (!flag && sensor.judgeR() == ENV) {
-            flag = 1;
-            delay(200);
-        }
-        if (flag && sensor.judgeR() == LINE) {
-            delay(200);
-            break;
-        }
-    }
+    motor.runright(60);
+    motor.runleft(-50);
+    delay(900);
 }
 
 void setup(){
@@ -241,7 +231,7 @@ void loop(){
         turnright();
         motor.runright(50);
         motor.runleft(50);
-        force_cruise(500, cruise_slowly);
+        force_cruise(650, cruise_slowly);
         
         // motor.stop();
         // rgb.turnoff();
