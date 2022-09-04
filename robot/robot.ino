@@ -169,16 +169,12 @@ void sprint(){
 
 void turnright(){
     motor.runright(-40);
-    motor.runleft(40);
-    int flag = 0;
-    while (1){
-        if (!flag && sensor.judgeM() == ENV) flag = 1;
-        if (flag && sensor.judgeR() == LINE) break;
-    }
+    motor.runleft(70);
+    delay(500);
 }
 
 void turnleft(){
-    motor.runright(40);
+    motor.runright(70);
     motor.runleft(-40);
     int flag = 0;
     while (1){
