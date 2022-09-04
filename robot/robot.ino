@@ -243,6 +243,7 @@ void loop(){
         motor.stop();
         rgb.turnoff();
         while(1);
+        
         /*
          if (robotmode == grasping) {
             grasp();
