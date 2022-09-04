@@ -135,6 +135,30 @@ void cruise_slowly(){
         motor.runleft(0);
     }
 }
+void cruise_slowly_strictly(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(40);
+        motor.runleft(40);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(0);
+        motor.runleft(40);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(-40);
+        motor.runleft(40);
+    }
+    else if (LineError == LEFT){
+        motor.runright(40);
+        motor.runleft(0);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(40);
+        motor.runleft(-40);
+    }
+}
 
 void grasp(){
     if (cornerCount % 3 == 0){
@@ -176,7 +200,7 @@ void turnright(){
 void turnleft(){
     motor.runright(60);
     motor.runleft(-50);
-    delay(900);
+    delay(950);
 }
 
 void setup(){
@@ -231,7 +255,7 @@ void loop(){
         turnright();
         motor.runright(50);
         motor.runleft(50);
-        force_cruise(650, cruise_strictly);
+        force_cruise(1000, cruise_slowly_strictly);
         
         // motor.stop();
         // rgb.turnoff();
