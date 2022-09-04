@@ -14,7 +14,7 @@
 #define LINE BLACK
 #define ENV WHITE
 
-#define WHITE_SENSOR_BOUND (500)
+#define WHITE_SENSOR_BOUND (350)
 #define EDGE_PIN (A9)
 #define TRIGGER_PIN  (23)
 #define ECHO_PIN     (22)
@@ -97,7 +97,7 @@ void cruise(){
         motor.runleft(110);
     }
     else if (LineError == EXTRARIGHT){
-        motor.runright(15);
+        motor.runright(12);
         motor.runleft(110);
     }
     else if (LineError == LEFT){
@@ -106,7 +106,7 @@ void cruise(){
     }
     else if (LineError == EXTRALEFT){
         motor.runright(110);
-        motor.runleft(15);
+        motor.runleft(12);
     }
 }
 
@@ -198,7 +198,7 @@ void setup(){
         }
         delay(10);
     }
-    start_time = millis();
+
     pinMode(EDGE_PIN, INPUT);
     rgb.white();
     robotmode = cruising;
@@ -285,7 +285,6 @@ void loop(){
     }
     else{
         cruise();
-        delay(10);
     }
 
 }
