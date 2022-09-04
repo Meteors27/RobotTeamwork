@@ -14,7 +14,7 @@
 #define LINE BLACK
 #define ENV WHITE
 
-#define WHITE_SENSOR_BOUND (400)
+#define WHITE_SENSOR_BOUND (500)
 #define EDGE_PIN (A9)
 #define TRIGGER_PIN  (23)
 #define ECHO_PIN     (22)
@@ -35,7 +35,6 @@ WhiteScaleSensor edgeSensor(EDGE_PIN, BLACK, WHITE, WHITE_SENSOR_BOUND);
 
 int cornerCount;
 int start_time;
-int sprinted = false;
 
 enum RobotMode{
     cruising = 0,
@@ -90,24 +89,24 @@ void cruise(){
     int LineError;
     LineError = sensor.detect();
     if (LineError == STRAIGHT){
-        motor.runright(90);
-        motor.runleft(90);
+        motor.runright(110);
+        motor.runleft(110);
     }
     else if (LineError == RIGHT){
-        motor.runright(30);
-        motor.runleft(90);
+        motor.runright(60);
+        motor.runleft(110);
     }
     else if (LineError == EXTRARIGHT){
-        motor.runright(0);
-        motor.runleft(90);
+        motor.runright(15);
+        motor.runleft(110);
     }
     else if (LineError == LEFT){
-        motor.runright(90);
-        motor.runleft(30);
+        motor.runright(110);
+        motor.runleft(60);
     }
     else if (LineError == EXTRALEFT){
-        motor.runright(90);
-        motor.runleft(0);
+        motor.runright(110);
+        motor.runleft(15);
     }
 }
 
@@ -136,54 +135,57 @@ void cruise_slowly(){
     }
 }
 
+void cruise_slowly_and_violently(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(40);
+        motor.runleft(40);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(0);
+        motor.runleft(40);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(-40);
+        motor.runleft(40);
+    }
+    else if (LineError == LEFT){
+        motor.runright(40);
+        motor.runleft(0);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(40);
+        motor.runleft(-40);
+    }
+}
+
 void grasp(){
     if (cornerCount % 3 == 0){
 
     }
 }
 
-void sprint(){
-    int LineError;
-    LineError = sensor.detect();
-    if (LineError == STRAIGHT){
-        motor.runright(110);
-        motor.runleft(110);
-    }
-    else if (LineError == RIGHT){
-        motor.runright(30);
-        motor.runleft(110);
-    }
-    else if (LineError == EXTRARIGHT){
-        motor.runright(0);
-        motor.runleft(110);
-    }
-    else if (LineError == LEFT){
-        motor.runright(110);
-        motor.runleft(30);
-    }
-    else if (LineError == EXTRALEFT){
-        motor.runright(110);
-        motor.runleft(0);
-    }
-}
-
 void turnright(){
     motor.runright(-40);
     motor.runleft(40);
-    int flag = 0;
+    bool flag1 = false, flag2 = false;
     while (1){
-        if (!flag && sensor.judgeM() == ENV) flag = 1;
-        if (flag && sensor.judgeR() == LINE) break;
+        if (sensor.judgeM() == ENV) flag1 = true;
+        if (flag1 && sensor.judgeL() == ENV) flag2 = true;
+        if (flag2 && sensor.judgeL() == LINE) break;
     }
 }
 
 void turnleft(){
-    motor.runright(40);
+    motor.runright(70);
     motor.runleft(-40);
-    int flag = 0;
+    delay(200);
+    bool flag1 = false, flag2 = 0;
     while (1){
-        if (!flag && sensor.judgeR() == ENV) flag = 1;
-        if (flag && sensor.judgeM() == LINE) break;
+        if (sensor.judgeM() == ENV) flag1 = true;
+        if (sensor.judgeR() == ENV) flag2 = true;
+        if (flag2 && sensor.judgeL() == LINE) break;
     }
 }
 
@@ -196,7 +198,6 @@ void setup(){
         }
         delay(10);
     }
-
     start_time = millis();
     pinMode(EDGE_PIN, INPUT);
     rgb.white();
@@ -213,10 +214,6 @@ void force_cruise(int time, void cruise_type()){
 }
 
 void loop(){
-    if (!sprinted && millis() - start_time > 3800) {
-        force_cruise(600, sprint);
-        sprinted = true;
-    }
     if (edgeSensor.detect() == LINE){
         switch (cornerCount % 3){
         case 0:
@@ -235,15 +232,19 @@ void loop(){
         cornerCount++;
     }
     if (robotmode == grasping || robotmode == placing){
+
+        edgeSensor.disable();
+
         turnright();
-        motor.runright(50);
-        motor.runleft(50);
-        force_cruise(500, cruise_slowly);
-        
+        motor.runright(70);
+        motor.runleft(70);
+        force_cruise(600, cruise_slowly_and_violently);
+
         motor.stop();
-        rgb.turnoff();
-        while(1);
-        
+        delay(2000);
+        // rgb.turnoff();
+        // while(1);
+
         /*
          if (robotmode == grasping) {
             grasp();
@@ -256,20 +257,20 @@ void loop(){
 
         */
 
-        motor.runleft(-50);
-        motor.runright(-50);
-        int current_time = millis();
-        while ((millis() - current_time) < 500){
-            ;
-        }
+        motor.runleft(-70);
+        motor.runright(-64);
+        delay(500);
         turnleft();
 
 
         // avoid redundant increment to cornerCount
         // otherwise it will get intcremented after the call to turnleft() in the loop()
-        force_cruise(500, cruise_slowly);
+        force_cruise(1500, cruise_slowly);
         robotmode = cruising;
         rgb.white();
+
+        edgeSensor.enable();
+
     }
     else if (IS_OBSTACLE){
         rgb.red();
