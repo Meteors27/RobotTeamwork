@@ -256,7 +256,7 @@ void loop(){
         motor.runright(50);
         motor.runleft(50);
         force_cruise(1000, cruise_slowly_strictly);
-        while(1)motor.stop();
+        while(1) motor.stop();
         // motor.stop();
         // rgb.turnoff();
         // while(1);
