@@ -46,19 +46,13 @@ enum RobotMode{
 } robotmode;
 // int next = TURNRIGHT;
 
-
-//TODO
 void avoidObstacle(){
     motor.runright(60);
     motor.runleft(90);
     delay(700);
     motor.runright(80);
     motor.runleft(74);
-    while (sensor.judgeM() != LINE){
-        ;
-    }
-    rgb.green();
-    //期望其能够斜着上线，后面直接用循迹
+    while (sensor.judgeM() != LINE) ;
 }
 
 void cruise_strictly(){
@@ -247,9 +241,6 @@ void loop(){
         motor.runleft(50);
         force_cruise(500, cruise_slowly);
         
-        // motor.stop();
-        // rgb.turnoff();
-        // while(1);
         /*
          if (robotmode == grasping) {
             grasp();
@@ -266,10 +257,6 @@ void loop(){
         motor.runright(-50);
         delay(500);
         turnleft();
-
-
-        // avoid redundant increment to cornerCount
-        // otherwise it will get intcremented after the call to turnleft() in the loop()
         rgb.turnoff();
         force_cruise(2000, cruise_slowly);
         robotmode = cruising;
@@ -278,7 +265,6 @@ void loop(){
     else if (IS_OBSTACLE){
         rgb.red();
         // avoidObstacle过程中亮红灯
-
         avoidObstacle();
         rgb.blue();
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
@@ -291,5 +277,4 @@ void loop(){
         cruise();
         delay(10);
     }
-
 }
