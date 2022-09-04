@@ -34,6 +34,8 @@ RGB rgb(37, 33, 35);
 WhiteScaleSensor edgeSensor(EDGE_PIN, BLACK, WHITE, WHITE_SENSOR_BOUND);
 
 int cornerCount;
+int start_time;
+int sprinted = false;
 
 enum RobotMode{
     cruising = 0,
@@ -194,6 +196,8 @@ void setup(){
         }
         delay(10);
     }
+
+    start_time = millis();
     pinMode(EDGE_PIN, INPUT);
     rgb.white();
     robotmode = cruising;
@@ -209,7 +213,10 @@ void force_cruise(int time, void cruise_type()){
 }
 
 void loop(){
-
+    if (!sprinted && millis() - start_time > 3800) {
+        force_cruise(600, sprint);
+        sprinted = true;
+    }
     if (edgeSensor.detect() == LINE){
         switch (cornerCount % 3){
         case 0:
