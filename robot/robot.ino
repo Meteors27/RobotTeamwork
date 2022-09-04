@@ -135,6 +135,30 @@ void cruise_slowly(){
         motor.runleft(0);
     }
 }
+void cruise_slowly_strictly(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(40);
+        motor.runleft(40);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(0);
+        motor.runleft(40);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(-40);
+        motor.runleft(40);
+    }
+    else if (LineError == LEFT){
+        motor.runright(40);
+        motor.runleft(0);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(40);
+        motor.runleft(-40);
+    }
+}
 
 void grasp(){
     if (cornerCount % 3 == 0){
@@ -168,29 +192,15 @@ void sprint(){
 }
 
 void turnright(){
-    motor.runright(-40);
+    motor.runright(-70);
     motor.runleft(40);
-    int flag = 0;
-    while (1){
-        if (!flag && sensor.judgeM() == ENV) flag = 1;
-        if (flag && sensor.judgeR() == LINE) break;
-    }
+    delay(1000);
 }
 
 void turnleft(){
-    motor.runright(40);
-    motor.runleft(-40);
-    int flag = 0;
-    while (1){
-        if (!flag && sensor.judgeR() == ENV) {
-            flag = 1;
-            delay(200);
-        }
-        if (flag && sensor.judgeR() == LINE) {
-            delay(200);
-            break;
-        }
-    }
+    motor.runright(60);
+    motor.runleft(-50);
+    delay(950);
 }
 
 void setup(){
@@ -245,8 +255,8 @@ void loop(){
         turnright();
         motor.runright(50);
         motor.runleft(50);
-        force_cruise(500, cruise_slowly);
-        
+        force_cruise(1000, cruise_slowly_strictly);
+        while(1)motor.stop();
         // motor.stop();
         // rgb.turnoff();
         // while(1);
