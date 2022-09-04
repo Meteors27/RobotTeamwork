@@ -235,14 +235,17 @@ void loop(){
         cornerCount++;
     }
     if (robotmode == grasping || robotmode == placing){
+
+        edgeSensor.disable();
+
         turnright();
         motor.runright(50);
         motor.runleft(50);
         force_cruise(500, cruise_slowly);
         
-        motor.stop();
-        rgb.turnoff();
-        while(1);
+        // motor.stop();
+        // rgb.turnoff();
+        // while(1);
         /*
          if (robotmode == grasping) {
             grasp();
@@ -257,10 +260,7 @@ void loop(){
 
         motor.runleft(-50);
         motor.runright(-50);
-        int current_time = millis();
-        while ((millis() - current_time) < 500){
-            ;
-        }
+        delay(500);
         turnleft();
 
 
@@ -273,6 +273,9 @@ void loop(){
     else if (IS_OBSTACLE){
         rgb.red();
         // avoidObstacle过程中亮红灯
+
+        edgeSensor.enable();
+
         avoidObstacle();
         rgb.blue();
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
