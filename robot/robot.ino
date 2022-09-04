@@ -240,7 +240,6 @@ void loop(){
         motor.runleft(50);
         force_cruise(500, cruise_slowly);
         
-        // for testing
         motor.stop();
         rgb.turnoff();
         while(1);
