@@ -242,8 +242,6 @@ void loop(){
     }
     if (robotmode == grasping || robotmode == placing){
 
-        edgeSensor.disable();
-
         turnright();
         motor.runright(50);
         motor.runleft(50);
@@ -272,15 +270,14 @@ void loop(){
 
         // avoid redundant increment to cornerCount
         // otherwise it will get intcremented after the call to turnleft() in the loop()
-        force_cruise(500, cruise_slowly);
+        rgb.turnoff();
+        force_cruise(2000, cruise_slowly);
         robotmode = cruising;
         rgb.white();
     }
     else if (IS_OBSTACLE){
         rgb.red();
         // avoidObstacle过程中亮红灯
-
-        edgeSensor.enable();
 
         avoidObstacle();
         rgb.blue();
