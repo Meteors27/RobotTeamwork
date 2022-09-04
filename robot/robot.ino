@@ -184,10 +184,10 @@ void turnleft(){
     while (1){
         if (!flag && sensor.judgeR() == ENV) {
             flag = 1;
-            delay(100);
+            delay(200);
         }
         if (flag && sensor.judgeR() == LINE) {
-            delay(100);
+            delay(200);
             break;
         }
     }
