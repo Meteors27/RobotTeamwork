@@ -4,7 +4,6 @@ import picamera
 from time import sleep
 import picamera.array
 
-
 # camera = PiCamera()
 # camera.resolution = (1024, 768)
 
