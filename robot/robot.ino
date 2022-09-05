@@ -6,8 +6,8 @@
 #include <WhiteScaleSensor.h>
 #include <Servo.h>
 
-#define TURNRIGHT   1
-#define TURNBACK    2
+#define TURNRIGHT 1
+#define TURNBACK  2
 
 #define BLACK 1
 #define WHITE 0
