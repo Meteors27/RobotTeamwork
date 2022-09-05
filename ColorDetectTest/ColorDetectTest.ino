@@ -1,6 +1,17 @@
+/////////////////////
+/*
+GY-33软件串口代码
+GY33----MINI
+VCC----VCC
+GND----GND
+1:GY33_TX---10,
+2:GY33_RX---11,send A5 01 A6 to GY-33
+*/
+//////////////////
 #include <SoftwareSerial.h>
-SoftwareSerial mySerial(10, 11); // arduino-RX, arduino-TX
+#define MAX 11
 
+SoftwareSerial mySerial(10, 11); // arduino-RX, arduino-TX
 
 unsigned char Re_buf[11],counter=0;
 unsigned char sign=0;
@@ -10,24 +21,26 @@ void setup() {
    mySerial.begin(9600);
    mySerial.listen();  
    delay(10); 
+   /*
    mySerial.write(0xA5);
    mySerial.write(0x60);
    mySerial.write(0x05);
-   
+   */
    /*改变LED亮度
    mySerial.write(0xA5);
    mySerial.write(0x60);
    mySerial.write(0x05);
    */
-   /* 输出rgb
-   mySerial.write(0xA5); 
-   mySerial.write(0x01);
-   mySerial.write(0xA6);
-   */
-   
-   mySerial.write(0xA5); 
-   mySerial.write(0x82);
-   mySerial.write(0x27);
+    if (MAX == 8) { // 输出rgb
+        mySerial.write(0xA5); 
+        mySerial.write(0x81);
+        mySerial.write(0x26);
+    }
+    else if (MAX == 11) {  //输出颜色
+        mySerial.write(0xA5); 
+        mySerial.write(0x82);
+        mySerial.write(0x27);
+    }
 } 
 
 void loop() {
@@ -36,14 +49,14 @@ void loop() {
     Re_buf[counter]=(unsigned char)mySerial.read();
     if(counter==0&&Re_buf[0]!=0x5A) return;      // 检查帧头         
     counter++;       
-    if(counter==11)                //接收到数据
+    if(counter==MAX)                //接收到数据
     {    
        counter=0;                 //重新赋值，准备下一帧数据的接收 
        sign=1;
     }      
   }
   
-  if(sign && Re_buf[2] == 0x45) //返回RGB数值
+  if(sign && Re_buf[2] == 0x45)
   {   
      sign=0;
      for(i=0;i<7;i++)
@@ -58,13 +71,16 @@ void loop() {
            Serial.print(",g:");
            Serial.print( rgb[1]);
            Serial.print(",b:");
-           Serial.println( rgb[2]); 
+           Serial.println( rgb[2]);
+           
    }
   } 
-  else if(sign && Re_buf[2] == 0x25) //返回颜色
+  if(sign && Re_buf[2] == 0x25)
   {   
      sign=0;
-     for(i=0;i<11;i++) sum+=Re_buf[i]; 
+     //Serial.println("read 0x25!");
+     for(i=0;i<11;i++)
+     sum+=Re_buf[i]; 
      unsigned char color = (Re_buf[8]<<8)|Re_buf[9];
      switch(color){
       case 1: Serial.println("1红色");break;
@@ -76,8 +92,13 @@ void loop() {
       case 64: Serial.println("7深蓝色");break;
       case 128: Serial.println("8蓝色");break;
      }
+     //Serial.print(color);
+     
    } 
+  //Serial.println("not available!");
 }
+
+
 
 int bin(int bi, int len){
   int i = 0;
