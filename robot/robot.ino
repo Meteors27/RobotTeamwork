@@ -336,13 +336,13 @@ void force_cruise(int time, void cruise_type()){
 // 机械臂部分程序
 
 void block_placing(){
-    rotate_to(177, &servo_roboticArm);
+    rotate_to(3, &servo_roboticArm);
     delay(200);
 
     rotate_to(50, &servo_hand);  //手张开
     delay(200);
 
-    rotate_to(135, &servo_lowerArm); //最底下的舵机到位
+    rotate_to(125, &servo_lowerArm); //最底下的舵机到位
     delay(300);
     rotate_to(53, &servo_middleArm);//第二个舵机到位
     delay(300);
@@ -352,29 +352,29 @@ void block_placing(){
     rotate_to(95, &servo_hand); //爪子合拢抓取
     delay(1000);
 
-    angle_lowerArm_slow(110);//抬升
+    angle_lowerArm_slow(100);//抬升
     delay(1000);
 
-    rotate_to(45, &servo_roboticArm); //转180度
+    rotate_to(135, &servo_roboticArm); //转180度
     delay(1000);
 
-    rotate_to(135, &servo_lowerArm); //下降，最底下的舵机到位
+    rotate_to(125, &servo_lowerArm); //下降，最底下的舵机到位
     delay(300);
 
     rotate_to(50, &servo_hand); //爪子松开，放置
     delay(200);
 
-    angle_lowerArm_slow(110);//抬升
+    angle_lowerArm_slow(100);//抬升
     delay(1000);
 
     //下面是抓取
-    rotate_to(135, &servo_lowerArm); //最底下的舵机到位
+    rotate_to(125, &servo_lowerArm); //最底下的舵机到位
     delay(300);
 
     rotate_to(95, &servo_hand); //爪子合拢抓取
     delay(1000);
 
-    angle_lowerArm_slow(110);//抬升
+    angle_lowerArm_slow(100);//抬升
     delay(1000);
 }
 
