@@ -144,13 +144,13 @@ void loop(){
 }
 
 void setup_servos(){
-    servo_lowerArm.attach(17);
-    servo_middleArm.attach(16);
-    servo_upperArm.attach(15);
-    servo_hand.attach(14);
+    servo_lowerArm.attach(4);
+    servo_middleArm.attach(3);
+    servo_upperArm.attach(2);
+    servo_hand.attach(1);
 
-    servo_roboticArm.attach(18);
-    servo_storageBox.attach(20);
+    servo_roboticArm.attach(5);
+    servo_storageBox.attach(6);
 }
 
 /**
