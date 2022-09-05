@@ -98,10 +98,12 @@ void loop(){
 
         setup_servos();
 
+        rgb.turnoff();
         while (1){
             block_placing();
         }
 
+        rgb.yellow();
         /*
          if (robotmode == grasping) {
             grasp();
@@ -342,7 +344,7 @@ void block_placing(){
     rotate_to(50, &servo_hand);  //手张开
     delay(200);
 
-    rotate_to(125, &servo_lowerArm); //最底下的舵机到位
+    rotate_to(110, &servo_lowerArm); //最底下的舵机到位
     delay(300);
     rotate_to(53, &servo_middleArm);//第二个舵机到位
     delay(300);
@@ -352,29 +354,29 @@ void block_placing(){
     rotate_to(95, &servo_hand); //爪子合拢抓取
     delay(1000);
 
-    angle_lowerArm_slow(100);//抬升
+    angle_lowerArm_slow(90);//抬升
     delay(1000);
 
     rotate_to(135, &servo_roboticArm); //转180度
     delay(1000);
 
-    rotate_to(125, &servo_lowerArm); //下降，最底下的舵机到位
+    rotate_to(110, &servo_lowerArm); //下降，最底下的舵机到位
     delay(300);
 
     rotate_to(50, &servo_hand); //爪子松开，放置
     delay(200);
 
-    angle_lowerArm_slow(100);//抬升
+    angle_lowerArm_slow(90);//抬升
     delay(1000);
 
     //下面是抓取
-    rotate_to(125, &servo_lowerArm); //最底下的舵机到位
+    rotate_to(110, &servo_lowerArm); //最底下的舵机到位
     delay(300);
 
     rotate_to(95, &servo_hand); //爪子合拢抓取
     delay(1000);
 
-    angle_lowerArm_slow(100);//抬升
+    angle_lowerArm_slow(90);//抬升
     delay(1000);
 }
 
@@ -390,13 +392,13 @@ void rotate_to(int target_angle, Servo* servo){
 
     if (target_angle < now_angle){
         for (int i = now_angle;i > target_angle;i--){
-            servo_hand.write(i);
+            servo->write(i);
             delay(15);
         }
     }
     else if (target_angle > now_angle){
         for (int i = now_angle;i < target_angle;i++){
-            servo_hand.write(i);
+            servo->write(i);
             delay(15);
         }
     }
