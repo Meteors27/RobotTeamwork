@@ -15,7 +15,9 @@
 #define LINE BLACK
 #define ENV WHITE
 
-#define WHITE_SENSOR_BOUND (400)
+#define speedrate 1
+
+#define WHITE_SENSOR_BOUND (300)
 #define EDGE_PIN (A3)
 #define TRIGGER_PIN  (28)
 #define ECHO_PIN     (30)
@@ -105,6 +107,7 @@ void loop(){
         force_cruise(1200, cruise_slowly_strictly);
 
         motor.stop();
+        while(1);
 
         setup_servos();
 
@@ -354,48 +357,48 @@ void force_cruise(int time, void cruise_type()){
 //================================
 // 机械臂部分程序
 
-void block_placing(){
-    rotate_to(3, &servo_roboticArm);
-    delay(200);
+// void block_placing(){
+//     rotate_to(3, &servo_roboticArm);
+//     delay(200);
 
-    rotate_to(50, &servo_hand);  //手张开
-    delay(200);
+//     rotate_to(50, &servo_hand);  //手张开
+//     delay(200);
 
-    rotate_to(110, &servo_lowerArm); //最底下的舵机到位
-    delay(300);
-    rotate_to(53, &servo_middleArm);//第二个舵机到位
-    delay(300);
-    rotate_to(20, &servo_upperArm); //最上面的舵机到位，打下来
-    delay(300);
+//     rotate_to(110, &servo_lowerArm); //最底下的舵机到位
+//     delay(300);
+//     rotate_to(53, &servo_middleArm);//第二个舵机到位
+//     delay(300);
+//     rotate_to(20, &servo_upperArm); //最上面的舵机到位，打下来
+//     delay(300);
 
-    rotate_to(95, &servo_hand); //爪子合拢抓取
-    delay(1000);
+//     rotate_to(95, &servo_hand); //爪子合拢抓取
+//     delay(1000);
 
-    angle_lowerArm_slow(90);//抬升
-    delay(1000);
+//     angle_lowerArm_slow(90);//抬升
+//     delay(1000);
 
-    rotate_to(135, &servo_roboticArm); //转180度
-    delay(1000);
+//     rotate_to(135, &servo_roboticArm); //转180度
+//     delay(1000);
 
-    rotate_to(110, &servo_lowerArm); //下降，最底下的舵机到位
-    delay(300);
+//     rotate_to(110, &servo_lowerArm); //下降，最底下的舵机到位
+//     delay(300);
 
-    rotate_to(50, &servo_hand); //爪子松开，放置
-    delay(200);
+//     rotate_to(50, &servo_hand); //爪子松开，放置
+//     delay(200);
 
-    angle_lowerArm_slow(90);//抬升
-    delay(1000);
+//     angle_lowerArm_slow(90);//抬升
+//     delay(1000);
 
-    //下面是抓取
-    rotate_to(110, &servo_lowerArm); //最底下的舵机到位
-    delay(300);
+//     //下面是抓取
+//     rotate_to(110, &servo_lowerArm); //最底下的舵机到位
+//     delay(300);
 
-    rotate_to(95, &servo_hand); //爪子合拢抓取
-    delay(1000);
+//     rotate_to(95, &servo_hand); //爪子合拢抓取
+//     delay(1000);
 
-    angle_lowerArm_slow(90);//抬升
-    delay(1000);
-}
+//     angle_lowerArm_slow(90);//抬升
+//     delay(1000);
+// }
 
 /**
  * @brief 将servo转到target_angle角度
