@@ -5,17 +5,20 @@
 #else
 #include "WProgram.h"
 #endif
+#include <SoftwareSerial.h>
 
 class ColorDetector{
     public:
         ColorDetector();
+        void init();
         unsigned char *readRGB();
-        unsigned char *readLux(); 
+        unsigned char *readLux();
+        String color(); 
+        byte rgb[3];
     private:
         unsigned char Re_buf[11], counter;
         unsigned char sign;
-        byte rgb[3];
-        void *myserial;
+        
 };
 
 #endif
