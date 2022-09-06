@@ -52,9 +52,9 @@ typedef struct armmm{
     int upperArm;
 } armstatus;
 
-armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
-armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {160,110,32,10}, leftforward_down = {160,140,10,0};
-armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {115,110,32,10}, rightforward_down = {115,140,10,0};
+armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,120,53,20};
+armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {160,110,32,10}, leftforward_down = {160,150,10,0};
+armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {115,110,32,10}, rightforward_down = {115,150,10,0};
 
 typedef struct hooole{
     int angle = 0;
@@ -100,7 +100,7 @@ void loop(){
         force_cruise(600, sprint);
         sprinted = true;
     }
-    if (edgeSensor.detect() == LINE){
+    if (edgeSensor.detect() == LINE && sprinted){
         switch (cornerCount % 3){
         case 0:
             robotmode = cruising;
@@ -541,7 +541,6 @@ void block_grabbing(){
     test_light(cd.color());
     delay(500);
     rgb.turnoff();
-    while(1);
 }
 
 void block_placing(){
