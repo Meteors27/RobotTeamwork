@@ -37,6 +37,7 @@ CK008 ck008(CK008_PIN);
 WhiteScaleSensor edgeSensor(EDGE_PIN, BLACK, WHITE, WHITE_SENSOR_BOUND);
 Servo servo_lowerArm, servo_middleArm, servo_upperArm, servo_hand;
 Servo servo_roboticArm, servo_storageBox;
+ColorDetector cd;
 
 typedef struct armmm{
     int roboticArm;
@@ -49,7 +50,15 @@ armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,8
 armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {155,110,32,10}, leftforward_down = {155,140,10,0};
 armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {105,110,32,10}, rightforward_down = {105,140,10,0};
 
-int cnt = 1;
+typedef struct hooole{
+    int angle = 0;
+} Hole;
+
+#define angle1st (5)
+#define angle2nd (95)
+#define angle3rd (180)
+
+Hole bluehole, redhole, greenhole;
 
 int cornerCount;
 int start_time;
@@ -65,9 +74,9 @@ void setup(){
     cornerCount = 1;
     int current = millis();
     setup_servos();
-    rotate_arm(back_up,1);
-    rotate_arm(back_down,1);
-    rotate_to(5,&servo_storageBox);
+    rotate_arm(back_up, 1);
+    rotate_arm(back_down, 1);
+    rotate_to(5, &servo_storageBox);
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
@@ -113,16 +122,15 @@ void loop(){
 
         rgb.turnoff();
 
-        rgb.yellow();
+        rgb.magenta();
 
-        
-         if (robotmode == grasping) {
+        if (robotmode == grasping){
             block_grabbing();
-         }
-         else {
+        }
+        else{
             block_placing();
-         }
-        
+        }
+
 
         motor.runleft(-50);
         motor.runright(-50);
@@ -147,8 +155,8 @@ void loop(){
         // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
         force_cruise(1000, cruise_strictly);
         //TODO 角度待改动
-        force_cruise(2500, cruise);
-        // force_cruise_rotate(120, 2500, cruise);
+        // force_cruise(2500, cruise);
+        force_cruise_rotate(5, 2500, cruise);
         robotmode = cruising;
         rgb.white();
         edgeSensor.enable();
@@ -447,6 +455,8 @@ void block_grabbing(){
     rotate_to(5, &servo_storageBox);
     rotate_arm(back_up, 1);
 
+
+
     rotate_arm(rightforward_up, 3);
     rotate_arm(rightforward_down, 1);
     hand_close();
@@ -457,6 +467,8 @@ void block_grabbing(){
     rotate_arm(back_down, 1);
     hand_open();
     rotate_arm(back_up, 1);//grab right block
+
+
 
     rotate_arm(forward_up, 2);
     hand_open();
@@ -469,6 +481,10 @@ void block_grabbing(){
     hand_open();
     rotate_arm(back_up, 1);//grab middle block
 
+    // TODO 数字需要修改
+    record(cd.color(), 1);
+    test_light(cd.color());
+
     rotate_arm(leftforward_up, 3);
     rotate_arm(leftforward_down, 1);
     hand_close();
@@ -479,13 +495,42 @@ void block_grabbing(){
     hand_open();
     rotate_arm(back_up, 1);//grab left block
 
+    record(cd.color(), 2);
+    test_light(cd.color());
+
+    rotate_to(5, &servo_storageBox);
+    delay(10);
+    record(cd.color(), 3);
+
+    //testing
+    test_light(cd.color());
+    delay(500);
+    rgb.turnoff();
 }
 
 void block_placing(){
+    // 上面一排的顺序：蓝红绿
     rotate_arm(back_up, 1);
     hand_open();
-
-    rotate_to(5, &servo_storageBox);
+    // 这里在颜色识别转到蓝色之后可以不转（如果边走边转成功了）
+    if (bluehole.angle != 0){
+        rotate_to(bluehole.angle, &servo_storageBox);
+        place_left_up();
+    }
+    if (redhole.angle != 0){
+        rotate_to(redhole.angle, &servo_storageBox);
+        place_middle_up();
+    }
+    if (greenhole.angle != 0){
+        rotate_to(greenhole.angle, &servo_storageBox);
+        place_right_up();
+    }
+}
+/**
+ * @brief BLUE.
+ */
+void place_left_up(){
+    rotate_to(bluehole.angle, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
@@ -494,7 +539,12 @@ void block_placing(){
     hand_open();
     rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);//place left block
+}
 
+/**
+ * @brief RED
+ */
+void place_middle_up(){
     rotate_to(95, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
@@ -504,7 +554,12 @@ void block_placing(){
     hand_open();
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);//place middle block
+}
 
+/**
+ * @brief GREEN
+ */
+void place_right_up(){
     rotate_to(180, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
@@ -514,10 +569,7 @@ void block_placing(){
     hand_open();
     rotate_arm(rightforward_up, 3);
     rotate_arm(back_up, 2);//place right block
-
 }
-
-
 /**
  * @brief 将指定电机转到指定角度，先输入本次指定电机数量，再分别输入：
  * 电机1的目标角度，电机1指针，电机2的目标角度，电机2指针……
@@ -603,5 +655,32 @@ void force_cruise_rotate(int target_angle, int time, void cruise_type()){
             servo_storageBox.write(now_angle);
         }
         delay(15);
+    }
+}
+
+void record(String color, int angle){
+    if (color == "red"){
+        redhole.angle = angle;
+    }
+    else if (color == "blue"){
+        bluehole.angle = angle;
+    }
+    else if (color == "green"){
+        greenhole.angle = angle;
+    }
+}
+
+void test_light(String){
+    if (color == "red"){
+        rgb.red();
+    }
+    else if (color == "blue"){
+        rgb.blue();
+    }
+    else if (color == "green"){
+        rgb.green();
+    }
+    else{
+        rgb.turnoff();
     }
 }
