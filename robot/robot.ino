@@ -5,17 +5,23 @@
 #include <RGB.h>
 #include <WhiteScaleSensor.h>
 #include <Servo.h>
+#include <ColorDetector.h>
 
-#define TURNRIGHT 1
-#define TURNBACK  2
+#define S0 (49)
+#define S1 (51)
+#define S2 (45)
+#define S3 (43)
+#define OUT (47)
+#define TURNRIGHT (1)
+#define TURNBACK  (2)
 
-#define BLACK 1
-#define WHITE 0
+#define BLACK (1)
+#define WHITE (0)
 
 #define LINE BLACK
 #define ENV WHITE
 
-#define speedrate 0
+#define speedrate (0)
 
 #define WHITE_SENSOR_BOUND (330)
 #define EDGE_PIN (A3)
@@ -37,7 +43,7 @@ CK008 ck008(CK008_PIN);
 WhiteScaleSensor edgeSensor(EDGE_PIN, BLACK, WHITE, WHITE_SENSOR_BOUND);
 Servo servo_lowerArm, servo_middleArm, servo_upperArm, servo_hand;
 Servo servo_roboticArm, servo_storageBox;
-ColorDetector cd;
+ColorDetector cd(S0, S1, S2, S3, OUT);
 
 typedef struct armmm{
     int roboticArm;
