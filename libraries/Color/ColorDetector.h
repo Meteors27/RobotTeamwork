@@ -9,16 +9,17 @@
 
 class ColorDetector{
     public:
-        ColorDetector();
-        void init();
-        unsigned char *readRGB();
-        unsigned char *readLux();
+        ColorDetector(int S0, int S1, int S2, int S3, int OUT);
         String color(); 
-        byte rgb[3];
     private:
-        unsigned char Re_buf[11], counter;
-        unsigned char sign;
-        
+        int pinS0;
+        int pinS1;
+        int pinS2;
+        int pinS3;
+        int pinOUT; 
+        int process_red_value();
+        int process_green_value();
+        int process_blue_value();
 };
 
 #endif
