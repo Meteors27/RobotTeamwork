@@ -15,7 +15,7 @@
 #define LINE BLACK
 #define ENV WHITE
 
-#define speedrate 1
+#define speedrate 0
 
 #define WHITE_SENSOR_BOUND (330)
 #define EDGE_PIN (A3)
@@ -46,8 +46,8 @@ typedef struct armmm{
 } armstatus;
 
 armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,85,53,20}, forward_down = {135,115,53,20};
-armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {155,110,32,10}, leftforward_down = {155,140,10,0};
-armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {120,110,32,10}, rightforward_down = {120,140,10,0};
+armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {165,110,32,10}, leftforward_down = {165,140,10,0};
+armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {110,110,32,10}, rightforward_down = {110,140,10,0};
 
 int cnt = 1;
 
@@ -57,7 +57,6 @@ int sprinted = false;
 
 enum RobotMode{
     cruising = 0,
-    obstacle,
     grasping,
     placing,
 } robotmode;
@@ -66,6 +65,8 @@ void setup(){
     cornerCount = 1;
     int current = millis();
     setup_servos();
+    rotate_arm(back_up,1);
+    rotate_arm(back_down,1);
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
@@ -101,11 +102,9 @@ void loop(){
         cornerCount++;
     }
     if (robotmode == grasping || robotmode == placing){
-
+        edgeSensor.disable();
         turnright();
-        motor.runright(50);
-        motor.runleft(50);
-        force_cruise(1200, cruise_slowly_strictly);
+        force_cruise(1300, cruise_slowly_strictly);
 
         motor.stop();
         delay(500);
@@ -126,7 +125,7 @@ void loop(){
 
         motor.runleft(-50);
         motor.runright(-50);
-        delay(500);
+        delay(980);
         turnleft();
 
 
@@ -151,6 +150,7 @@ void loop(){
         // force_cruise_rotate(120, 2500, cruise);
         robotmode = cruising;
         rgb.white();
+        edgeSensor.enable();
     }
     else{
         cruise();
@@ -187,15 +187,15 @@ void avoidObstacle(){
 }
 
 void turnright(){
-    motor.runright(-70);
+    motor.runright(-60);
     motor.runleft(40);
-    delay(1000);
+    delay(1100);
 }
 
 void turnleft(){
     motor.runright(60);
     motor.runleft(-50);
-    delay(950);
+    delay(1000);
 }
 
 void cruise(){
@@ -321,16 +321,6 @@ void sprint(){
         motor.runright(110);
         motor.runleft(0);
     }
-}
-
-void grasp(){
-    if (cornerCount % 3 == 0){
-
-    }
-}
-
-void place(){
-
 }
 
 
