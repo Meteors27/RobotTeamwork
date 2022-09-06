@@ -21,18 +21,18 @@
 #define ECHO_PIN     (30)
 #define MAX_DISTANCE (100)
 #define CK008_PIN (38)
-#define FRONT_LEFT_SENSOR A0
-#define FRONT_MIDDLE_SENSOR A1
-#define FRONT_RIGHT_SENSOR A2
+#define FRONT_LEFT_SENSOR (A0)
+#define FRONT_MIDDLE_SENSOR (A1)
+#define FRONT_RIGHT_SENSOR (A2)
 #define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() > 0)
 
 
 
 TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
+RGB rgb(36, 32, 34);
 GREYSCALESENSOR sensor = GREYSCALESENSOR(FRONT_LEFT_SENSOR, FRONT_MIDDLE_SENSOR, FRONT_RIGHT_SENSOR, 500, BLACK, WHITE);
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 CK008 ck008(CK008_PIN);
-RGB rgb(36, 32, 34);
 WhiteScaleSensor edgeSensor(EDGE_PIN, BLACK, WHITE, WHITE_SENSOR_BOUND);
 Servo servo_lowerArm, servo_middleArm, servo_upperArm, servo_hand;
 Servo servo_roboticArm, servo_storageBox;
