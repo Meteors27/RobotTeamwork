@@ -17,7 +17,7 @@
 
 #define speedrate 1
 
-#define WHITE_SENSOR_BOUND (300)
+#define WHITE_SENSOR_BOUND (330)
 #define EDGE_PIN (A3)
 #define TRIGGER_PIN  (28)
 #define ECHO_PIN     (30)
@@ -107,23 +107,23 @@ void loop(){
         force_cruise(1200, cruise_slowly_strictly);
 
         motor.stop();
-        while(1);
+        delay(500);
 
-        setup_servos();
+        // setup_servos();
 
         rgb.turnoff();
-        while (1){
-            block_placing();
-        }
+        // while (1){
+        //     block_placing();
+        // }
 
         rgb.yellow();
 
-        while (1){
-            if (cnt == 1){
-                block_grabbing();
-                cnt = 0;
-            }
-        }
+        // while (1){
+        //     if (cnt == 1){
+        //         block_grabbing();
+        //         cnt = 0;
+        //     }
+        // }
         /*
          if (robotmode == grasping) {
             grasp();
@@ -142,7 +142,7 @@ void loop(){
         // avoid redundant increment to cornerCount
         // otherwise it will get intcremented after the call to turnleft() in the loop()
         rgb.turnoff();
-        force_cruise(2000, cruise_slowly);
+        force_cruise(2000, cruise_slowly_strictly);
         robotmode = cruising;
         rgb.white();
     }
