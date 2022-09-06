@@ -207,6 +207,7 @@ void rotate_with_servos(int num_of_servos, ...){
 
     for (int i = 0; i < num_of_servos; i++){
         increments[i] /= fabs(min_diff);
+        increments[i] = round(increments[i]);
     }
 
     for (int i = 0; i < min_diff; i++){
