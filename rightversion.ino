@@ -10,7 +10,7 @@ int cnt = 1;
 #define STORAGEBOX_1 5 
 #define STORAGEBOX_2 90
 #define STORAGEBOX_3 180
-#define speedrate 0
+#define speedrate 0.1
 
 CK008 ck008(CK008_PIN);
 
@@ -140,16 +140,19 @@ void block_grabbing(){
 
 void block_placing(){
     rotate_arm(back_up, 1);
+    hand_open();
 
+    rotate_to(5,&servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(rightforward_down, 1);
+    rotate_arm(leftforward_up, 3);
+    rotate_arm(leftforward_down, 1);
     hand_open();
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(back_up, 2);//place right block
+    rotate_arm(leftforward_up, 3);
+    rotate_arm(back_up, 2);//place left block
 
+    rotate_to(90,&servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
@@ -159,14 +162,16 @@ void block_placing(){
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);//place middle block
 
+    rotate_to(175,&servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(leftforward_down, 1);
+    rotate_arm(rightforward_up, 3);
+    rotate_arm(rightforward_down, 1);
     hand_open();
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(back_up, 2);//place left block
+    rotate_arm(rightforward_up, 3);
+    rotate_arm(back_up, 2);//place right block
+
 }
 
 void setup(){
@@ -184,7 +189,8 @@ void setup(){
 void loop(){
 
     if (cnt == 1){
-        block_grabbing();
+        //block_grabbing();
+        block_placing();
         cnt = 0;
     }
 }
