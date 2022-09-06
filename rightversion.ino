@@ -51,12 +51,15 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
         delay(300 * speedrate);
+
+
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         break;
     case 2:
+
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
@@ -77,6 +80,7 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         delay(100 * speedrate);
         break;
     }
+
     return;
 }
 
@@ -178,13 +182,13 @@ void loop(){
 /**
  * @brief 将指定电机转到指定角度，先输入本次指定电机数量，再分别输入：
  * 电机1的目标角度，电机1指针，电机2的目标角度，电机2指针……
- * 
+ *
  * @param num_of_servos 本次需要使用的电机数量
  * @param ... 先输入一个角度，再输入一个电机 and so on...
  */
 void rotate_with_servos(int num_of_servos, ...){
     va_list valist;
-    va_start(valist, 2 * num_of_servos);
+    va_start(valist, num_of_servos);
     Servo* servoP;
 
     Servo* servos[num_of_servos];
@@ -203,6 +207,7 @@ void rotate_with_servos(int num_of_servos, ...){
             min_diff = increments[i];
         }
     }
+    va_end(valist);
 
     for (int i = 0; i < num_of_servos; i++){
         increments[i] /= fabs(min_diff);
@@ -216,17 +221,4 @@ void rotate_with_servos(int num_of_servos, ...){
         }
         delay(15);
     }
-    // if (target_angle < now_angle){
-    //     for (int i = now_angle;i > target_angle;i--){
-    //         servo->write(i);
-    //         delay(15);
-    //     }
-    // }
-    // else if (target_angle > now_angle){
-    //     for (int i = now_angle;i < target_angle;i++){
-    //         servo->write(i);
-    //         delay(15);
-    //     }
-    // }
-
 }
