@@ -47,6 +47,7 @@ armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,8
 armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {155,110,32,10}, leftforward_down = {155,140,10,0};
 armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {120,110,32,10}, rightforward_down = {120,140,10,0};
 
+int cnt = 1;
 
 int cornerCount;
 int start_time;
