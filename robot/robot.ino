@@ -118,7 +118,9 @@ void loop(){
         cornerCount++;
     }
     if (robotmode == grasping || robotmode == placing){
-        edgeSensor.disable();
+        if (robotmode == grasping){
+            edgeSensor.disable();
+        }
         turnright();
         force_cruise(1300, cruise_slowly_strictly);
 
@@ -138,16 +140,16 @@ void loop(){
         }
 
 
-        motor.runleft(-50);
+        motor.runleft(-46);
         motor.runright(-50);
-        delay(980);
+        delay(950);
         turnleft();
 
 
         // avoid redundant increment to cornerCount
-        // otherwise it will get intcremented after the call to turnleft() in the loop()
+        // otherwise it will get incremented after the call to turnleft() in the loop()
         rgb.turnoff();
-        force_cruise(2100, cruise_slowly_strictly);
+        force_cruise(2100, cruise_down_hill);
         robotmode = cruising;
         rgb.white();
     }
@@ -161,8 +163,8 @@ void loop(){
         // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
         force_cruise(1000, cruise_strictly);
         //TODO 角度待改动
-        // force_cruise(2500, cruise);
-        force_cruise_rotate(5, 2500, cruise);
+        force_cruise(2500, cruise);
+        // force_cruise_rotate(5, 2500, cruise);
         robotmode = cruising;
         rgb.white();
         edgeSensor.enable();
@@ -203,13 +205,13 @@ void avoidObstacle(){
 
 void turnright(){
     motor.runright(-60);
-    motor.runleft(40);
+    motor.runleft(50); //40
     delay(1100);
 }
 
 void turnleft(){
     motor.runright(60);
-    motor.runleft(-50);
+    motor.runleft(-55); //-50
     delay(1000);
 }
 
@@ -309,6 +311,31 @@ void cruise_slowly_strictly(){
     }
     else if (LineError == EXTRALEFT){
         motor.runright(40);
+        motor.runleft(-40);
+    }
+}
+
+void cruise_down_hill(){
+    int LineError;
+    LineError = sensor.detect();
+    if (LineError == STRAIGHT){
+        motor.runright(10);
+        motor.runleft(10);
+    }
+    else if (LineError == RIGHT){
+        motor.runright(-20);
+        motor.runleft(10);
+    }
+    else if (LineError == EXTRARIGHT){
+        motor.runright(-40);
+        motor.runleft(0);
+    }
+    else if (LineError == LEFT){
+        motor.runright(10);
+        motor.runleft(-20);
+    }
+    else if (LineError == EXTRALEFT){
+        motor.runright(0);
         motor.runleft(-40);
     }
 }
