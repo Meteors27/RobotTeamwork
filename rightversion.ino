@@ -98,37 +98,39 @@ void hand_close(){
 
 void block_grabbing(){
     hand_open();
+    rotate_to(5,&servo_storageBox);
     rotate_arm(back_up, 1);
 
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(leftforward_down, 1);
+    rotate_arm(rightforward_up, 3);
+    rotate_arm(rightforward_down, 1);
     hand_close();
-    rotate_arm(leftforward_up, 3);
+    rotate_arm(rightforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
     hand_open();
-    rotate_arm(back_up, 1);//grab left block
+    rotate_arm(back_up, 1);//grab right block
 
     rotate_arm(forward_up, 2);
     hand_open();
     rotate_arm(forward_down, 1);
     hand_close();
-    rotate_to(5,&servo_storageBox);
+    rotate_to(90,&servo_storageBox);
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);
     rotate_arm(back_down, 1);
     hand_open();
     rotate_arm(back_up, 1);//grab middle block
 
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(rightforward_down, 1);
+    rotate_arm(leftforward_up, 3);
+    rotate_arm(leftforward_down, 1);
     hand_close();
     rotate_to(175,&servo_storageBox);
-    rotate_arm(rightforward_up, 3);
+    rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
     hand_open();
-    rotate_arm(back_up, 1);//grab right block
+    rotate_arm(back_up, 1);//grab left block
+
 }
 
 void block_placing(){
@@ -215,6 +217,7 @@ void rotate_with_servos(int num_of_servos, ...){
         increments[i] /= fabs(min_diff);
         increment[i] = (int)(increments[i]);
     }
+
 
     for (int i = 0; i < min_diff; i++){
         for (int j = 0; j < num_of_servos; j++){
