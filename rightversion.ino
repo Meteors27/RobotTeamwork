@@ -10,7 +10,7 @@ int cnt = 1;
 #define STORAGEBOX_1 5 
 #define STORAGEBOX_2 90
 #define STORAGEBOX_3 180
-#define speedrate 0.2
+#define speedrate 0
 
 CK008 ck008(CK008_PIN);
 
@@ -55,8 +55,12 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
 
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
+        //新增并行
+        //rotate_with_servos(2,ARMSTATUS.roboticArm, &servo_roboticArm, ARMSTATUS.storageBox, &servo_storageBox);
+        //delay(100 * speedrate);
+
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
-        delay(300 * speedrate);
+        //delay(300 * speedrate);
         break;
     case 2:
 
@@ -104,6 +108,7 @@ void block_grabbing(){
     rotate_arm(rightforward_up, 3);
     rotate_arm(rightforward_down, 1);
     hand_close();
+    rotate_to(5,&servo_storageBox);
     rotate_arm(rightforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
