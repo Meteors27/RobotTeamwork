@@ -12,18 +12,33 @@ GND----GND
 /* 测试情况：rgb输出一般只会在几个值之间浮动。 */
 
 #include <SoftwareSerial.h>
-#define MAX 11
-
+#define MAX 8
+#define judgement(a,b,c) (rgb[a] - rgb[b] > 25 && rgb[a] - rgb[c] > 25)
+#define judgement2(a,b,c) (rgb[a] > 190 && rgb[b] < 190 && rgb[c] < 190)
+//#include <ColorDetector.h>
 SoftwareSerial mySerial(10, 11); // arduino-RX, arduino-TX
 
 unsigned char Re_buf[11], counter = 0;
 unsigned char sign = 0;
 byte rgb[3] = {0};
+
 void setup() {
     Serial.begin(9600);
+
     mySerial.begin(9600);
-    mySerial.listen();
+
+    mySerial.listen();    //修改亮度
+    delay(10);            //修改亮度
+    mySerial.write(0xA5); //修改亮度
+    mySerial.write(0x60); //修改亮度
+    mySerial.write(0x05); //修改亮度
+
+    mySerial.listen();    //修改开机配置
+    mySerial.write(0xA5); 
+    mySerial.write((unsigned char)0x00);
+    mySerial.write(0xA5);
     delay(10);
+
     /*
     mySerial.write(0xA5);
     mySerial.write(0x60);
@@ -34,6 +49,7 @@ void setup() {
     mySerial.write(0x60);
     mySerial.write(0x05);
     */
+   /*
     if (MAX == 8) { // 输出rgb
         mySerial.write(0xA5);
         mySerial.write(0x81);
@@ -44,10 +60,20 @@ void setup() {
         mySerial.write(0x82);
         mySerial.write(0x27);
     }
+    */
+    
+
+    
 }
 
 void loop() {
     unsigned char i = 0, sum = 0;
+    mySerial.listen();
+    delay(10);
+    mySerial.write(0xA5);
+    mySerial.write(0x54);
+    mySerial.write(0xF9);
+
     while (mySerial.available()) {
         Re_buf[counter] = (unsigned char)mySerial.read();
         if (counter == 0 && Re_buf[0] != 0x5A)
@@ -77,6 +103,18 @@ void loop() {
             Serial.println(rgb[2]);
         }
     }
+    
+    if(judgement(0,1,2) || judgement2(0,1,2))
+        Serial.println("red");
+    else if(judgement(1,0,2) || (judgement2(1,0,2) && rgb[1]>200))
+        Serial.println("green");
+    else if(rgb[2]>=rgb[1] && rgb[2] > rgb[0] + 30|| judgement2(2,0,1))
+        Serial.println("blue");
+    else 
+        Serial.println("unknown");
+
+    
+    /*
     if (sign && Re_buf[2] == 0x25) {
         sign = 0;
         // Serial.println("read 0x25!");
@@ -111,16 +149,11 @@ void loop() {
         }
         // Serial.print(color);
     }
+    */
+    delay(100);
     // Serial.println("not available!");
 }
 
-/**
- * @brief Helper function for testing.
- * 
- * @param bi 
- * @param len 
- * @return int 
- */
 int bin(int bi, int len) {
     int i = 0;
     while (i < len) {
