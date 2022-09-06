@@ -8,7 +8,7 @@
 
 #define judge_red(r,g,b) ((g) - (r) > 100 && (b) - (r) > 100)
 #define judge_blue(r,g,b) ((g) - (b) > 100 && (r) - (b) > 100)
-#define judge_green(r,g,b) ((r) - (g) > 35 && (b) - (g) > 35)
+#define judge_green(r,g,b) ((r) - (g) > 10 && (b) - (g) > 10)
 
 /**
  * @param S0

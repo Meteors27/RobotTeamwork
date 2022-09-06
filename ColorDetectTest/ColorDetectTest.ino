@@ -12,6 +12,13 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  Serial.print("  r:");
+  Serial.print(cd.red());
+  Serial.print("  g:");
+  Serial.print(cd.green());
+  Serial.print("  b:");
+  Serial.print(cd.blue());
+  Serial.println();
   Serial.println(cd.color());
   delay(500);
 }
