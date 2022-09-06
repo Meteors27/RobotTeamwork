@@ -133,7 +133,7 @@ void loop(){
         rgb.magenta();
 
         if (robotmode == grasping){
-            // block_grabbing();
+            block_grabbing();
         }
         else{
             block_placing();
