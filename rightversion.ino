@@ -102,13 +102,13 @@ void hand_close(){
 
 void block_grabbing(){
     hand_open();
-    rotate_to(5,&servo_storageBox);
+    rotate_to(5, &servo_storageBox);
     rotate_arm(back_up, 1);
 
     rotate_arm(rightforward_up, 3);
     rotate_arm(rightforward_down, 1);
     hand_close();
-    rotate_to(5,&servo_storageBox);
+    rotate_to(5, &servo_storageBox);
     rotate_arm(rightforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
@@ -119,7 +119,7 @@ void block_grabbing(){
     hand_open();
     rotate_arm(forward_down, 1);
     hand_close();
-    rotate_to(90,&servo_storageBox);
+    rotate_to(90, &servo_storageBox);
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);
     rotate_arm(back_down, 1);
@@ -129,7 +129,7 @@ void block_grabbing(){
     rotate_arm(leftforward_up, 3);
     rotate_arm(leftforward_down, 1);
     hand_close();
-    rotate_to(175,&servo_storageBox);
+    rotate_to(175, &servo_storageBox);
     rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
@@ -142,7 +142,7 @@ void block_placing(){
     rotate_arm(back_up, 1);
     hand_open();
 
-    rotate_to(5,&servo_storageBox);
+    rotate_to(5, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
@@ -152,7 +152,7 @@ void block_placing(){
     rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);//place left block
 
-    rotate_to(90,&servo_storageBox);
+    rotate_to(90, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
@@ -162,7 +162,7 @@ void block_placing(){
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);//place middle block
 
-    rotate_to(175,&servo_storageBox);
+    rotate_to(175, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);

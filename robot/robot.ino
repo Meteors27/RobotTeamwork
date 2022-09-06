@@ -153,8 +153,11 @@ void loop(){
         avoidObstacle();
         rgb.blue();
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
+        // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
         force_cruise(1000, cruise_strictly);
+        //TODO 角度待改动
         force_cruise(2500, cruise);
+        // force_cruise_rotate(120, 2500, cruise);
         robotmode = cruising;
         rgb.white();
     }
@@ -553,4 +556,26 @@ void block_placing(){
     hand_open();
     rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);//place left block
+}
+
+/**
+ * @brief Rotate the plate while cruising.
+ * calls to delay() included.
+ *
+ * @param target_angle 目标角度
+ * @param time 巡线时间（需大于1.5秒）
+ * @param cruise_type 巡线类型（函数指针）
+ */
+void force_cruise_rotate(int target_angle, int time, void cruise_type()){
+    int current_time = millis();
+    int now_angle = servo_storageBox.read();
+    int increment = now_angle > target_angle ? 1 : -1;
+    while (millis() - current_time < time){
+        cruise_type();
+        if (now_angle != target_angle){
+            now_angle += increment;
+            servo_storageBox.write(now_angle);
+        }
+        delay(15);
+    }
 }
