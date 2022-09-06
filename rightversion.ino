@@ -10,7 +10,7 @@ int cnt = 1;
 #define STORAGEBOX_1 5 
 #define STORAGEBOX_2 90
 #define STORAGEBOX_3 180
-#define speedrate 1
+#define speedrate 0.2
 
 CK008 ck008(CK008_PIN);
 
@@ -22,8 +22,8 @@ typedef struct armmm{
 }armstatus;
 
 armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,85,53,20}, forward_down = {135,115,53,20};
-armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {155,110,32,10}, leftforward_down = {155,140,10,0};
-armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {120,110,32,10}, rightforward_down = {120,140,10,0};
+armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {165,110,32,10}, leftforward_down = {165,140,10,0};
+armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {110,100,32,10}, rightforward_down = {110,140,10,0};
 
 void rotate_to(int target_angle, Servo* servo){
     int now_angle;
@@ -113,6 +113,7 @@ void block_grabbing(){
     hand_open();
     rotate_arm(forward_down, 1);
     hand_close();
+    rotate_to(5,&servo_storageBox);
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);
     rotate_arm(back_down, 1);
@@ -122,6 +123,7 @@ void block_grabbing(){
     rotate_arm(rightforward_up, 3);
     rotate_arm(rightforward_down, 1);
     hand_close();
+    rotate_to(175,&servo_storageBox);
     rotate_arm(rightforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
@@ -161,7 +163,6 @@ void block_placing(){
 }
 
 void setup(){
-    while (ck008.detect() != TOUCHED);
     servo_lowerArm.attach(4);
     servo_middleArm.attach(3);
     servo_upperArm.attach(2);
@@ -169,6 +170,7 @@ void setup(){
 
     servo_roboticArm.attach(5);
     servo_storageBox.attach(6);
+    while (ck008.detect() != TOUCHED);
 
 }
 
