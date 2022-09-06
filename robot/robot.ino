@@ -65,11 +65,12 @@ enum RobotMode{
 void setup(){
     cornerCount = 1;
     int current = millis();
+    setup_servos();
     while (1){
-        if (ck008.detect() == TOUCHED || millis() - current > 10000){
+        if (ck008.detect() == TOUCHED){
             break;
         }
-        delay(10);
+        delay(20);
     }
 
     start_time = millis();
@@ -109,29 +110,19 @@ void loop(){
         motor.stop();
         delay(500);
 
-        // setup_servos();
 
         rgb.turnoff();
-        // while (1){
-        //     block_placing();
-        // }
 
         rgb.yellow();
 
-        // while (1){
-        //     if (cnt == 1){
-        //         block_grabbing();
-        //         cnt = 0;
-        //     }
-        // }
-        /*
+        
          if (robotmode == grasping) {
-            grasp();
+            block_grabbing();
          }
          else {
-            place();
+            block_placing();
          }
-        */
+        
 
         motor.runleft(-50);
         motor.runright(-50);
@@ -360,48 +351,7 @@ void force_cruise(int time, void cruise_type()){
 //================================
 // 机械臂部分程序
 
-// void block_placing(){
-//     rotate_to(3, &servo_roboticArm);
-//     delay(200);
 
-//     rotate_to(50, &servo_hand);  //手张开
-//     delay(200);
-
-//     rotate_to(110, &servo_lowerArm); //最底下的舵机到位
-//     delay(300);
-//     rotate_to(53, &servo_middleArm);//第二个舵机到位
-//     delay(300);
-//     rotate_to(20, &servo_upperArm); //最上面的舵机到位，打下来
-//     delay(300);
-
-//     rotate_to(95, &servo_hand); //爪子合拢抓取
-//     delay(1000);
-
-//     angle_lowerArm_slow(90);//抬升
-//     delay(1000);
-
-//     rotate_to(135, &servo_roboticArm); //转180度
-//     delay(1000);
-
-//     rotate_to(110, &servo_lowerArm); //下降，最底下的舵机到位
-//     delay(300);
-
-//     rotate_to(50, &servo_hand); //爪子松开，放置
-//     delay(200);
-
-//     angle_lowerArm_slow(90);//抬升
-//     delay(1000);
-
-//     //下面是抓取
-//     rotate_to(110, &servo_lowerArm); //最底下的舵机到位
-//     delay(300);
-
-//     rotate_to(95, &servo_hand); //爪子合拢抓取
-//     delay(1000);
-
-//     angle_lowerArm_slow(90);//抬升
-//     delay(1000);
-// }
 
 /**
  * @brief 将servo转到target_angle角度
@@ -445,7 +395,6 @@ void angle_lowerArm_slow(int angle){
     }
 }
 
-
 void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
     switch (rotate_mode){
     case 1:
@@ -453,12 +402,19 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
         delay(300 * speedrate);
+
+
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
+        //新增并行
+        // rotate_with_two_servos(ARMSTATUS.roboticArm, &servo_roboticArm, ARMSTATUS.storageBoxz, &servo_storageBox);
+        // delay(100 * speedrate);
+
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         break;
     case 2:
+
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
@@ -479,6 +435,7 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         delay(100 * speedrate);
         break;
     }
+
     return;
 }
 
@@ -496,49 +453,58 @@ void hand_close(){
 
 void block_grabbing(){
     hand_open();
+    rotate_to(5, &servo_storageBox);
     rotate_arm(back_up, 1);
 
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(leftforward_down, 1);
+    rotate_arm(rightforward_up, 3);
+    rotate_arm(rightforward_down, 1);
     hand_close();
-    rotate_arm(leftforward_up, 3);
+    rotate_to(5, &servo_storageBox);
+    // rotate_with_two_servos(5, &servo_storageBox, 95, &servo_hand);
+    rotate_arm(rightforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
     hand_open();
-    rotate_arm(back_up, 1);//grab left block
+    rotate_arm(back_up, 1);//grab right block
 
     rotate_arm(forward_up, 2);
     hand_open();
     rotate_arm(forward_down, 1);
     hand_close();
+    rotate_to(90, &servo_storageBox);
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);
     rotate_arm(back_down, 1);
     hand_open();
     rotate_arm(back_up, 1);//grab middle block
 
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(rightforward_down, 1);
+    rotate_arm(leftforward_up, 3);
+    rotate_arm(leftforward_down, 1);
     hand_close();
-    rotate_arm(rightforward_up, 3);
+    rotate_to(175, &servo_storageBox);
+    rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
     hand_open();
-    rotate_arm(back_up, 1);//grab right block
+    rotate_arm(back_up, 1);//grab left block
+
 }
 
 void block_placing(){
     rotate_arm(back_up, 1);
+    hand_open();
 
+    rotate_to(5, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(rightforward_down, 1);
+    rotate_arm(leftforward_up, 3);
+    rotate_arm(leftforward_down, 1);
     hand_open();
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(back_up, 2);//place right block
+    rotate_arm(leftforward_up, 3);
+    rotate_arm(back_up, 2);//place left block
 
+    rotate_to(90, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
@@ -548,15 +514,84 @@ void block_placing(){
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);//place middle block
 
+    rotate_to(175, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(leftforward_down, 1);
+    rotate_arm(rightforward_up, 3);
+    rotate_arm(rightforward_down, 1);
     hand_open();
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(back_up, 2);//place left block
+    rotate_arm(rightforward_up, 3);
+    rotate_arm(back_up, 2);//place right block
+
 }
+
+
+/**
+ * @brief 将指定电机转到指定角度，先输入本次指定电机数量，再分别输入：
+ * 电机1的目标角度，电机1指针，电机2的目标角度，电机2指针……
+ *
+ * @param num_of_servos 本次需要使用的电机数量
+ * @param ... 先输入一个角度，再输入一个电机 and so on...
+ */
+void rotate_with_servos(int num_of_servos, ...){
+    va_list valist;
+    va_start(valist, num_of_servos);
+    Servo* servoP;
+
+    Servo* servos[num_of_servos];
+    int now_angles[num_of_servos];
+    int tar_angles[num_of_servos];
+    double increments[num_of_servos];
+    int increment[num_of_servos];
+    double min_diff = 360.0;
+    for (int i = 0; i < num_of_servos; i++){
+        tar_angles[i] = va_arg(valist, int);
+        servoP = va_arg(valist, Servo*);
+        servos[i] = servoP;
+        now_angles[i] = servoP->read();
+        increments[i] = now_angles[i] - tar_angles[i];
+        if (increments[i] < min_diff){
+            min_diff = increments[i];
+        }
+    }
+    va_end(valist);
+
+    for (int i = 0; i < num_of_servos; i++){
+        increments[i] /= fabs(min_diff);
+        increment[i] = (int)(increments[i]);
+    }
+
+
+    for (int i = 0; i < min_diff; i++){
+        for (int j = 0; j < num_of_servos; j++){
+            now_angles[j] += increment[j];
+            (*(servos[j])).write(now_angles[j]);
+        }
+        delay(15);
+    }
+}
+
+void rotate_with_two_servos(int angle1, Servo* servo1, int angle2, Servo* servo2){
+    int now_angle1 = servo1->read();
+    int now_angle2 = servo2->read();
+
+    int increment1 = angle1 > now_angle1 ? 1 : -1;
+    int increment2 = angle2 > now_angle2 ? 1 : -1;
+
+    while (angle1 != now_angle1 || angle2 != now_angle2){
+        if (angle1 != now_angle1){
+            now_angle1 += increment1;
+            servo1->write(now_angle1);
+        }
+        if (angle2 != now_angle2){
+            now_angle2 += increment2;
+            servo2->write(now_angle2);
+        }
+        delay(15);
+    }
+}
+
 
 /**
  * @brief Rotate the plate while cruising.

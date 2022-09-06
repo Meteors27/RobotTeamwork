@@ -43,7 +43,6 @@ void rotate_to(int target_angle, Servo* servo){
     }
 }
 
-
 void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
     switch (rotate_mode){
     case 1:
@@ -56,11 +55,11 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
         //新增并行
-        //rotate_with_servos(2,ARMSTATUS.roboticArm, &servo_roboticArm, ARMSTATUS.storageBox, &servo_storageBox);
-        //delay(100 * speedrate);
+        // rotate_with_two_servos(ARMSTATUS.roboticArm, &servo_roboticArm, ARMSTATUS.storageBoxz, &servo_storageBox);
+        // delay(100 * speedrate);
 
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
-        //delay(300 * speedrate);
+        delay(300 * speedrate);
         break;
     case 2:
 
@@ -109,6 +108,7 @@ void block_grabbing(){
     rotate_arm(rightforward_down, 1);
     hand_close();
     rotate_to(5, &servo_storageBox);
+    // rotate_with_two_servos(5, &servo_storageBox, 95, &servo_hand);
     rotate_arm(rightforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
@@ -234,6 +234,26 @@ void rotate_with_servos(int num_of_servos, ...){
         for (int j = 0; j < num_of_servos; j++){
             now_angles[j] += increment[j];
             (*(servos[j])).write(now_angles[j]);
+        }
+        delay(15);
+    }
+}
+
+void rotate_with_two_servos(int angle1, Servo* servo1, int angle2, Servo* servo2){
+    int now_angle1 = servo1->read();
+    int now_angle2 = servo2->read();
+
+    int increment1 = angle1 > now_angle1 ? 1 : -1;
+    int increment2 = angle2 > now_angle2 ? 1 : -1;
+
+    while (angle1 != now_angle1 || angle2 != now_angle2){
+        if (angle1 != now_angle1){
+            now_angle1 += increment1;
+            servo1->write(now_angle1);
+        }
+        if (angle2 != now_angle2){
+            now_angle2 += increment2;
+            servo2->write(now_angle2);
         }
         delay(15);
     }
