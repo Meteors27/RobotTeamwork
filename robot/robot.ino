@@ -53,8 +53,8 @@ typedef struct armmm{
 } armstatus;
 
 armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
-armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {160,110,32,10}, leftforward_down = {160,140,10,0};
-armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {115,110,32,10}, rightforward_down = {115,140,10,0};
+armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {165,85,50,40}, leftforward_down = {165,125,50,40};
+armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {110,85,50,40}, rightforward_down = {110,125,50,40};
 
 typedef struct hooole{
     int angle = 0;
@@ -67,7 +67,7 @@ typedef struct hooole{
 Hole bluehole, redhole, greenhole;
 
 int cornerCount;
-int start_time;
+unsigned long start_time, start_time2;
 int sprinted = false;
 
 enum RobotMode{
@@ -80,9 +80,9 @@ void setup(){
     cornerCount = 1;
     int current = millis();
     setup_servos();
+    rotate_to(angle1st, &servo_storageBox);
     rotate_arm(back_up, 1);
     rotate_arm(back_down, 1);
-    rotate_to(5, &servo_storageBox);
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
@@ -96,11 +96,11 @@ void setup(){
 }
 
 void loop(){
-    if (!sprinted && millis() - start_time > 3800){
+    if (!sprinted && millis() - start_time > 3800 ||  millis() - start_time2 > 4000){
         force_cruise(600, sprint);
         sprinted = true;
     }
-    if (edgeSensor.detect() == LINE){
+    if (edgeSensor.detect() == LINE && sprinted){
         switch (cornerCount % 3){
         case 0:
             robotmode = cruising;
@@ -122,11 +122,16 @@ void loop(){
             edgeSensor.disable();
         }
         turnright();
-        force_cruise(1300, cruise_slowly_strictly);
-
+        //force_cruise(1300, cruise_slowly_strictly);直接改成读秒orz
+        motor.runright(55);
+        motor.runleft(50);
+        delay(750);
+        motor.runright(50);
+        motor.runleft(50);
+        delay(250);
+        
         motor.stop();
-        delay(500);
-
+        delay(1000);
 
         rgb.turnoff();
 
@@ -142,7 +147,7 @@ void loop(){
 
         motor.runleft(-46);
         motor.runright(-50);
-        delay(750);
+        delay(850);
         turnleft();
 
 
@@ -175,7 +180,9 @@ void loop(){
         cruise();
         delay(10);
     }
-
+    if (cornerCount == 3) {
+        start_time2 = millis();
+    }
 }
 
 void setup_servos(){
@@ -206,9 +213,12 @@ void avoidObstacle(){
 }
 
 void turnright(){
+    motor.runright(50);
+    motor.runleft(50);
+    delay(50);
     motor.runright(-65);
     motor.runleft(50); //40
-    delay(1100);
+    delay(1050);
 }
 
 void turnleft(){
@@ -468,6 +478,16 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
         break;
+     case 4:
+
+        rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
+        delay(100 * speedrate);
+        rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
+        delay(300 * speedrate);
+        rotate_to(ARMSTATUS.middleArm, &servo_middleArm);
+        delay(300 * speedrate);
+        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
+        delay(300 * speedrate);
     }
 
     return;
@@ -487,80 +507,109 @@ void hand_close(){
 
 void block_grabbing(){
     hand_open();
-    rotate_to(5, &servo_storageBox);
-    rotate_arm(back_up, 1);
-
-
 
     rotate_arm(rightforward_up, 3);
     rotate_arm(rightforward_down, 1);
     hand_close();
-    rotate_to(5, &servo_storageBox);
+    rotate_to(angle1st, &servo_storageBox);
     // rotate_with_two_servos(5, &servo_storageBox, 95, &servo_hand);
     rotate_arm(rightforward_up, 3);
-    rotate_arm(back_up, 2);
-    rotate_arm(back_down, 1);
+    rotate_arm(rightback_up, 2);
+    rotate_arm(rightback_down, 1);
     hand_open();
     rotate_arm(back_up, 1);//grab right block
-
 
 
     rotate_arm(forward_up, 2);
     hand_open();
     rotate_arm(forward_down, 1);
     hand_close();
-    rotate_to(95, &servo_storageBox);
+    rotate_to(angle2nd, &servo_storageBox);
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);
     rotate_arm(back_down, 1);
     hand_open();
     rotate_arm(back_up, 1);//grab middle block
-
-    // TODO 数字需要修改
-    record(cd.color(), 1);
+    
+    record(cd.color(), angle1st);
     test_light(cd.color());
+    delay(500);
+    // TODO 数字需要修改
 
     rotate_arm(leftforward_up, 3);
     rotate_arm(leftforward_down, 1);
     hand_close();
-    rotate_to(180, &servo_storageBox);
+    rotate_to(angle3rd, &servo_storageBox);
     rotate_arm(leftforward_up, 3);
-    rotate_arm(back_up, 2);
-    rotate_arm(back_down, 1);
+    rotate_arm(leftback_up, 2);
+    rotate_arm(leftback_down, 1);
     hand_open();
     rotate_arm(back_up, 1);//grab left block
 
-    record(cd.color(), 2);
-    test_light(cd.color());
-
-    rotate_to(5, &servo_storageBox);
-    delay(10);
-    record(cd.color(), 3);
-
-    //testing
+    
+    record(cd.color(), angle2nd);
     test_light(cd.color());
     delay(500);
+
+    rotate_to(angle1st,&servo_storageBox);
+    delay(1000);
+
+    record(cd.color(), angle3rd);
+    test_light(cd.color());
+
+    delay(300);
     rgb.turnoff();
-    while(1);
+
+    rotate_arm(back_down,1);
+    hand_close();
+
+    back_up = {8,85,53,25}, back_down = {8,125,53,25}, forward_up = {130,85,53,20}, forward_down = {130,115,53,20};
+    leftback_up = {5,85,50,30}, leftback_down = {5,115,60,30}, leftforward_up = {160,85,50,30}, leftforward_down = {160,125,50,30};
+    rightback_up = {5,85,60,30}, rightback_down = {5,115,60,30}, rightforward_up = {105,85,60,30}, rightforward_down = {105,125,50,30};
 }
 
 void block_placing(){
     // 上面一排的顺序：蓝红绿
-    rotate_arm(back_up, 1);
-    hand_open();
-    // 这里在颜色识别转到蓝色之后可以不转（如果边走边转成功了）
-    if (bluehole.angle != 0){
-        rotate_to(bluehole.angle, &servo_storageBox);
-        place_left_up();
+  hand_open();
+  rotate_arm(back_up,1); 
+  if (bluehole.angle != 0){
+      rotate_to(bluehole.angle, &servo_storageBox);
+      rotate_arm(leftback_down,1);
+      hand_close();
+      rotate_arm(leftback_up,1);
+      rotate_arm(leftforward_up,2);
+      rotate_arm(leftforward_down,1);
+      hand_open();
+      rotate_arm(forward_up,3);
     }
-    if (redhole.angle != 0){
+  
+  //place right block
+
+  if (redhole.angle != 0){
         rotate_to(redhole.angle, &servo_storageBox);
-        place_middle_up();
-    }
-    if (greenhole.angle != 0){
+        rotate_arm(back_down,1);
+        hand_close();
+        rotate_arm(back_up,1);
+        rotate_arm(forward_up,2);
+        rotate_arm(forward_down,1);
+        hand_open();
+        rotate_arm(forward_up,1);
+        rotate_arm(back_up,3);
+    }//place middle block
+  
+  if (greenhole.angle != 0){
         rotate_to(greenhole.angle, &servo_storageBox);
-        place_right_up();
+        rotate_arm(rightback_down,1);
+        hand_close();
+        rotate_arm(rightback_up,1);
+        rotate_arm(rightforward_up,2);
+        rotate_arm(rightforward_down,1);
+        hand_open();
+        rotate_arm(rightforward_up,3);
+        rotate_arm(back_up,2);
     }
+
+  rotate_arm(back_down,1);
 }
 /**
  * @brief BLUE.
