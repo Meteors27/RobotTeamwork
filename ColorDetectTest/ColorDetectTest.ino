@@ -1,6 +1,10 @@
 #include <ColorDetector.h>
-
-ColorDetector cd(5,4,7,6,8);
+#define S0 49
+#define S1 51
+#define S2 45
+#define S3 43
+#define OUT 47
+ColorDetector cd(S0, S1, S2, S3, OUT);
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
