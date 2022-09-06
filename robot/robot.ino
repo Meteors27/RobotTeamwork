@@ -676,7 +676,7 @@ void record(String color, int angle){
     }
 }
 
-void test_light(String){
+void test_light(String color){
     if (color == "red"){
         rgb.red();
     }
