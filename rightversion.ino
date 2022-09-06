@@ -9,7 +9,7 @@ int cnt = 1;
 #define STORAGEBOX_1 5 
 #define STORAGEBOX_2 90
 #define STORAGEBOX_3 180
-#define speedrate 3
+#define speedrate 1
 
 CK008 ck008(CK008_PIN);
 

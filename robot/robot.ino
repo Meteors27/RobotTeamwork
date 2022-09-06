@@ -55,7 +55,6 @@ int sprinted = false;
 
 enum RobotMode{
     cruising = 0,
-    intersetion,
     obstacle,
     grasping,
     placing,
