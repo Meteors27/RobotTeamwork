@@ -11,6 +11,9 @@ class ColorDetector{
     public:
         ColorDetector(int S0, int S1, int S2, int S3, int OUT);
         String color(); 
+        int red();
+        int green();
+        int blue();
     private:
         int pinS0;
         int pinS1;

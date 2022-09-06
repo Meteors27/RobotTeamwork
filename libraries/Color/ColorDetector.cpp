@@ -45,9 +45,23 @@ String ColorDetector::color()
     {
         if (judge_red(r,g,b)) return "red";
         else if (judge_blue(r,g,b)) return "blue";
-         else if (judge_green(r,g,b)) return "green";
-         else return "unknown";
+        else if (judge_green(r,g,b)) return "green";
     }
+    return "unknown";
+}
+int ColorDetector::red()
+{
+    return process_red_value();
+}
+
+int ColorDetector::green()
+{
+    return process_green_value();
+}
+
+int ColorDetector::blue()
+{
+    return process_blue_value();
 }
 
 int ColorDetector::process_red_value()
