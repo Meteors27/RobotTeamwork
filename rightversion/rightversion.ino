@@ -152,7 +152,7 @@ void block_placing()
 
   rotate_arm(back_down,1);
   hand_close();
-  rotate_arm(back_up,1);+
+  rotate_arm(back_up,1);
   rotate_arm(leftforward_up,3);
   rotate_arm(leftforward_down,1);
   hand_open();
