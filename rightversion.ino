@@ -1,6 +1,7 @@
 #include <Servo.h>  
 #include <CK008.h>     
-#include <stdarg.h>             
+#include <stdarg.h>
+#include <math.h>          
 Servo servo_lowerArm, servo_middleArm, servo_upperArm, servo_hand;
 Servo servo_roboticArm, servo_storageBox;
 int cnt = 1;
@@ -156,7 +157,7 @@ void block_placing(){
 }
 
 void setup(){
-    while(ck008.detect() != TOUCHED);
+    while (ck008.detect() != TOUCHED);
     servo_lowerArm.attach(4);
     servo_middleArm.attach(3);
     servo_upperArm.attach(2);
@@ -174,32 +175,58 @@ void loop(){
         cnt = 0;
     }
 }
+/**
+ * @brief 将指定电机转到指定角度，先输入本次指定电机数量，再分别输入：
+ * 电机1的目标角度，电机1指针，电机2的目标角度，电机2指针……
+ * 
+ * @param num_of_servos 本次需要使用的电机数量
+ * @param ... 先输入一个角度，再输入一个电机 and so on...
+ */
+void rotate_with_servos(int num_of_servos, ...){
+    va_list valist;
+    va_start(valist, 2 * num_of_servos);
+    Servo* servoP;
 
-// void rotate_with_servos(int num_of_servos, ...){
-//     va_list valist;
-//     va_start(valist, 2 * num);
-//     int i;
-//     Servo* servoP;
+    Servo* servos[num_of_servos];
+    int now_angles[num_of_servos];
+    int tar_angles[num_of_servos];
+    double increments[num_of_servos];
+    double min_diff = 360.0;
+    // int min_idx;
+    for (int i = 0; i < num_of_servos; i++){
+        tar_angles[i] = va_arg(valist, int);
+        servoP = va_arg(valist, Servo*);
+        servos[i] = servoP;
+        now_angles[i] = servoP->read();
+        increments[i] = now_angles[i] - tar_angles[i];
+        if (increments[i] < min_diff){
+            min_diff = increments[i];
+            // min_idx = i;
+        }
+    }
 
-//     Servo* servos[num_of_servos];
-//     int now_angles[num_of_servos];
-//     for (i = 0; i < num_of_servos; i++){
-//         servoP = va_arg(valist, Servo*);
-//         servos[i] = servoP;
-//         now_angles[i] = servoP->read();
-//     }
-//     va_end(valist);
+    for (int i = 0; i < num_of_servos; i++){
+        increments[i] /= fabs(min_diff);
+    }
 
-//     if (target_angle < now_angle){
-//         for (int i = now_angle;i > target_angle;i--){
-//             servo->write(i);
-//             delay(15);
-//         }
-//     }
-//     else if (target_angle > now_angle){
-//         for (int i = now_angle;i < target_angle;i++){
-//             servo->write(i);
-//             delay(15);
-//         }
-//     }
-// }
+    for (int i = 0; i < min_diff; i++){
+        for (int j = 0; j < num_of_servos; j++){
+            now_angles[j] += increments[j];
+            (*(servos[j])).write(now_angles[j]);
+        }
+        delay(15);
+    }
+    // if (target_angle < now_angle){
+    //     for (int i = now_angle;i > target_angle;i--){
+    //         servo->write(i);
+    //         delay(15);
+    //     }
+    // }
+    // else if (target_angle > now_angle){
+    //     for (int i = now_angle;i < target_angle;i++){
+    //         servo->write(i);
+    //         delay(15);
+    //     }
+    // }
+
+}
