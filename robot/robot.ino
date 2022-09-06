@@ -46,8 +46,8 @@ typedef struct armmm{
 } armstatus;
 
 armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,85,53,20}, forward_down = {135,115,53,20};
-armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {165,110,32,10}, leftforward_down = {165,140,10,0};
-armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {110,110,32,10}, rightforward_down = {110,140,10,0};
+armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {155,110,32,10}, leftforward_down = {155,140,10,0};
+armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {105,110,32,10}, rightforward_down = {105,140,10,0};
 
 int cnt = 1;
 
@@ -67,6 +67,7 @@ void setup(){
     setup_servos();
     rotate_arm(back_up,1);
     rotate_arm(back_down,1);
+    rotate_to(5,&servo_storageBox);
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
@@ -132,7 +133,7 @@ void loop(){
         // avoid redundant increment to cornerCount
         // otherwise it will get intcremented after the call to turnleft() in the loop()
         rgb.turnoff();
-        force_cruise(2000, cruise_slowly_strictly);
+        force_cruise(2100, cruise_slowly_strictly);
         robotmode = cruising;
         rgb.white();
     }
@@ -461,7 +462,7 @@ void block_grabbing(){
     hand_open();
     rotate_arm(forward_down, 1);
     hand_close();
-    rotate_to(90, &servo_storageBox);
+    rotate_to(95, &servo_storageBox);
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);
     rotate_arm(back_down, 1);
@@ -471,7 +472,7 @@ void block_grabbing(){
     rotate_arm(leftforward_up, 3);
     rotate_arm(leftforward_down, 1);
     hand_close();
-    rotate_to(175, &servo_storageBox);
+    rotate_to(180, &servo_storageBox);
     rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);
     rotate_arm(back_down, 1);
@@ -494,7 +495,7 @@ void block_placing(){
     rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);//place left block
 
-    rotate_to(90, &servo_storageBox);
+    rotate_to(95, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
@@ -504,7 +505,7 @@ void block_placing(){
     rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);//place middle block
 
-    rotate_to(175, &servo_storageBox);
+    rotate_to(180, &servo_storageBox);
     rotate_arm(back_down, 1);
     hand_close();
     rotate_arm(back_up, 1);
