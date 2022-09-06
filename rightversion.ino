@@ -191,8 +191,8 @@ void rotate_with_servos(int num_of_servos, ...){
     int now_angles[num_of_servos];
     int tar_angles[num_of_servos];
     double increments[num_of_servos];
+    int increment[num_of_servos];
     double min_diff = 360.0;
-    // int min_idx;
     for (int i = 0; i < num_of_servos; i++){
         tar_angles[i] = va_arg(valist, int);
         servoP = va_arg(valist, Servo*);
@@ -201,18 +201,17 @@ void rotate_with_servos(int num_of_servos, ...){
         increments[i] = now_angles[i] - tar_angles[i];
         if (increments[i] < min_diff){
             min_diff = increments[i];
-            // min_idx = i;
         }
     }
 
     for (int i = 0; i < num_of_servos; i++){
         increments[i] /= fabs(min_diff);
-        increments[i] = round(increments[i]);
+        increment[i] = (int)(increments[i]);
     }
 
     for (int i = 0; i < min_diff; i++){
         for (int j = 0; j < num_of_servos; j++){
-            now_angles[j] += increments[j];
+            now_angles[j] += increment[j];
             (*(servos[j])).write(now_angles[j]);
         }
         delay(15);
