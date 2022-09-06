@@ -52,9 +52,9 @@ typedef struct armmm{
     int upperArm;
 } armstatus;
 
-armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,85,53,20}, forward_down = {135,115,53,20};
-armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {155,110,32,10}, leftforward_down = {155,140,10,0};
-armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {105,110,32,10}, rightforward_down = {105,140,10,0};
+armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
+armstatus leftback_up = {5,85,53,20}, leftback_down = {5,110,53,20}, leftforward_up = {160,110,32,10}, leftforward_down = {160,140,10,0};
+armstatus rightback_up = {5,85,53,20}, rightback_down = {5,110,53,20}, rightforward_up = {115,110,32,10}, rightforward_down = {115,140,10,0};
 
 typedef struct hooole{
     int angle = 0;
@@ -133,7 +133,7 @@ void loop(){
         rgb.magenta();
 
         if (robotmode == grasping){
-            block_grabbing();
+            // block_grabbing();
         }
         else{
             block_placing();
@@ -142,14 +142,16 @@ void loop(){
 
         motor.runleft(-46);
         motor.runright(-50);
-        delay(950);
+        delay(750);
         turnleft();
 
 
         // avoid redundant increment to cornerCount
         // otherwise it will get incremented after the call to turnleft() in the loop()
         rgb.turnoff();
-        force_cruise(2100, cruise_down_hill);
+        force_cruise(1150, cruise_strictly);
+        rgb.magenta();
+        force_cruise(250, cruise_down_hill);
         robotmode = cruising;
         rgb.white();
     }
@@ -204,7 +206,7 @@ void avoidObstacle(){
 }
 
 void turnright(){
-    motor.runright(-60);
+    motor.runright(-65);
     motor.runleft(50); //40
     delay(1100);
 }
@@ -372,8 +374,8 @@ void sprint(){
  * Available: cruise, cruise_slowly, sprint, cruise_strictly, cruise_slowly_strictly.
  * @brief calls to delay() contained.
  */
-void force_cruise(int time, void cruise_type()){
-    int current = millis();
+void force_cruise(unsigned long time, void (*cruise_type)()){
+    unsigned long current = millis();
     while (millis() - current < time){
         cruise_type();
         delay(10);
