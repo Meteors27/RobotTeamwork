@@ -45,7 +45,7 @@ Servo servo_lowerArm, servo_middleArm, servo_upperArm, servo_hand;
 Servo servo_roboticArm, servo_storageBox;
 ColorDetector cd(S0, S1, S2, S3, OUT);
 
-#define delta 7
+#define delta (4)
 
 typedef struct armmm{
     int roboticArm;
@@ -247,7 +247,7 @@ void turnright(){
 void turnleft(){
     motor.runright(60);
     motor.runleft(-55); //-50
-    delay(950); // 1000 when low voltage,
+    delay(900); // 1000 when low voltage,
 }
 
 void cruise(){
