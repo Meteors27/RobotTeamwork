@@ -145,6 +145,7 @@ void loop(){
     }
     if (robotmode == grasping || robotmode == placing){
         turnright();
+        
         force_cruise(1550, cruise_slowly_strictly);
         //直接改成读秒orz
         // motor.runright(55);
