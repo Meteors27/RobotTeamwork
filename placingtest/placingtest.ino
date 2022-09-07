@@ -54,8 +54,8 @@ typedef struct armmm{
     int upperArm;
 } armstatus;
 
-armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
-armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {165,85,50,40}, leftforward_down = {165,125,50,40};
+armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,85,53,20}, forward_down = {135,115,53,20};
+armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {150,85,50,40}, leftforward_down = {150,125,50,40};
 armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {110,85,50,40}, rightforward_down = {110,125,50,40};
 
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
@@ -65,6 +65,9 @@ armstatus _back_up = {5,85,53,20}, _back_down = {5,110,60,30}, _forward_up = {14
 armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,125,53,40};
 armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,37}, _rightforward_down = {110 + delta,125,52,37};
 
+armstatus forward_down_low={135,85,105,35},forward_up_low={135,55,105,35},midblock_throw={60,55,105,35};
+armstatus leftforward_up_low = {175,70,65,25},leftforward_down_low={175,130,65,25},block_throw={60,70,65,25};
+armstatus rightforward_up_low={95,70,65,20},rightforward_down_low={95,120,65,20};
 
 typedef struct hooole{
     int angle = 0;
@@ -93,11 +96,13 @@ void setup(){
     setup_servos();
     rgb.blue();
     rotate_to(angle1st, &servo_storageBox);
+    // rotate_arm(forward_up_low, 2);
+    // rotate_arm(forward_down_low, 2);
     rotate_arm(back_up, 1);
     rotate_arm(back_down, 1);
-    bluehole.angle = angle1st;
-    redhole.angle = angle2nd;
-    greenhole.angle = angle3rd;
+    // bluehole.angle = angle1st;
+    // redhole.angle = angle2nd;
+    // greenhole.angle = angle3rd;
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
@@ -110,48 +115,48 @@ void setup(){
     robotmode = cruising;
 }
 
-void loop(){
-    if (edgeSensor.detect() == LINE){
-        // block_placing();
-        turnright();
-        force_cruise(1550, cruise_slowly_strictly);
-        //直接改成读秒orz
-        // motor.runright(55);
-        // motor.runleft(50);
-        // delay(750);
-        // motor.runright(50);
-        // motor.runleft(50);
-        // delay(250);
+// void loop(){
+//     if (edgeSensor.detect() == LINE){
+//         // block_placing();
+//         turnright();
+//         force_cruise(1550, cruise_slowly_strictly);
+//         //直接改成读秒orz
+//         // motor.runright(55);
+//         // motor.runleft(50);
+//         // delay(750);
+//         // motor.runright(50);
+//         // motor.runleft(50);
+//         // delay(250);
 
-        motor.stop();
+//         motor.stop();
 
-        rgb.magenta();
+//         rgb.magenta();
 
-        block_placing();
-
-
-        motor.runleft(-46);
-        motor.runright(-50);
-        delay(850);
-        motor.brake();
-
-        turnleft();
+//         block_placing();
 
 
-        // avoid redundant increment to cornerCount
-        // otherwise it will get incremented after the call to turnleft() in the loop()
-        rgb.turnoff();
-        force_cruise(1150, cruise_strictly);
-        rgb.magenta();
-        force_cruise(400, cruise_down_hill);
-        motor.stop();
-        while(1) ;
-    }
-    else{
-        cruise();
-        delay(10);
-    }
-}
+//         motor.runleft(-46);
+//         motor.runright(-50);
+//         delay(850);
+//         motor.brake();
+
+//         turnleft();
+
+
+//         // avoid redundant increment to cornerCount
+//         // otherwise it will get incremented after the call to turnleft() in the loop()
+//         rgb.turnoff();
+//         force_cruise(1150, cruise_strictly);
+//         rgb.magenta();
+//         force_cruise(400, cruise_down_hill);
+//         motor.stop();
+//         while (1);
+//     }
+//     else{
+//         cruise();
+//         delay(10);
+//     }
+// }
 
 void setup_servos(){
     servo_lowerArm.attach(4);
@@ -191,12 +196,12 @@ void turnright(){
     motor.runright(-65);
     motor.runleft(50); //40
     bool flag = false;
-    while(true){
-        if(sensor.judgeM() == ENV) {
+    while (true){
+        if (sensor.judgeM() == ENV){
             flag = true;
             delay(100);
         }
-        if(flag && sensor.judgeM() == LINE) break;
+        if (flag && sensor.judgeM() == LINE) break;
     }
     motor.brake();
     delay(500);
@@ -208,12 +213,12 @@ void turnleft(){
     motor.runright(60);
     motor.runleft(-55); //-50
     bool flag = false;
-    while(true){
-        if(sensor.judgeM() == ENV) {
+    while (true){
+        if (sensor.judgeM() == ENV){
             flag = true;
             delay(100);
         }
-        if(flag && sensor.judgeM() == LINE) break;
+        if (flag && sensor.judgeM() == LINE) break;
     }
     motor.brake();
     delay(100);
@@ -552,9 +557,6 @@ void block_grabbing(){
 
     delay(300);
     rgb.turnoff();
-
-    rotate_arm(back_down, 1);
-    hand_close();
 }
 
 void block_placing(){
@@ -756,5 +758,70 @@ void test_light(String color){
     }
     else{
         rgb.turnoff();
+    }
+}
+
+void block_grabbing_down(){
+    hand_open();
+    rotate_arm(rightforward_up_low,2);
+    rotate_arm(rightforward_down_low,1);
+    hand_close();
+    rotate_arm(rightforward_up_low,1);
+    delay(2000);
+    rotate_arm(block_throw,1);
+    hand_open();
+
+    rotate_arm(forward_up_low,2);
+    rotate_arm(forward_down_low,1);
+    hand_close();
+    rotate_arm(forward_up_low,1);
+    delay(1500);
+    rotate_arm(midblock_throw,1);
+    hand_open();
+
+    rotate_arm(leftforward_up_low,2);
+    rotate_arm(leftforward_down_low,1);
+    hand_close();
+    rotate_arm(leftforward_up_low,1);
+    delay(1500);
+    rotate_arm(block_throw,1);
+    hand_open();
+
+    rotate_arm(back_up,3);
+    rotate_arm(back_down, 1);
+    hand_close();
+}
+
+void loop(){
+    if (edgeSensor.detect() == LINE){
+        turnright();
+        force_cruise(1550, cruise_slowly_strictly);
+
+        motor.stop();
+
+        rgb.magenta();
+
+        block_grabbing();
+        block_grabbing_down();
+
+
+        motor.runleft(-46);
+        motor.runright(-50);
+        delay(850);
+        turnleft();
+
+
+        // avoid redundant increment to cornerCount
+        // otherwise it will get incremented after the call to turnleft() in the loop()
+        rgb.turnoff();
+        force_cruise(1150, cruise_strictly);
+        rgb.magenta();
+        force_cruise(400, cruise_down_hill);
+        motor.stop();
+        while(1);
+    }
+    else{
+        cruise();
+        delay(10);
     }
 }

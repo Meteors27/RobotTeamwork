@@ -54,8 +54,8 @@ typedef struct armmm{
     int upperArm;
 } armstatus;
 
-armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
-armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {165,85,50,40}, leftforward_down = {165,125,50,40};
+armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,85,53,20}, forward_down = {135,115,53,20};
+armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {150,85,50,40}, leftforward_down = {150,125,50,40};
 armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {110,85,50,40}, rightforward_down = {110,125,50,40};
 
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
@@ -63,8 +63,11 @@ armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforw
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
 armstatus _back_up = {5,85,53,20}, _back_down = {5,110,60,30}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
 armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,125,53,40};
-armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,32}, _rightforward_down = {110 + delta,125,52,32};
+armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,37}, _rightforward_down = {110 + delta,125,52,37};
 
+armstatus forward_down_low = {135,85,105,35}, forward_up_low = {135,55,105,35}, midblock_throw = {60,55,105,35};
+armstatus leftforward_up_low = {175,70,65,25}, leftforward_down_low = {175,130,65,25}, block_throw = {60,70,65,25};
+armstatus rightforward_up_low = {95,70,65,20}, rightforward_down_low = {95,120,65,20};
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
@@ -612,10 +615,6 @@ void block_grabbing(){
 
     delay(300);
     rgb.turnoff();
-
-    rotate_arm(back_down, 1);
-    hand_close();
-
 }
 
 void block_placing(){
@@ -675,6 +674,38 @@ void place_left_up(){
     rotate_arm(leftforward_up, 3);
     rotate_arm(back_up, 2);//place left block
 }
+
+void block_grabbing_down(){
+    hand_open();
+    rotate_arm(rightforward_up_low, 2);
+    rotate_arm(rightforward_down_low, 1);
+    hand_close();
+    rotate_arm(rightforward_up_low, 1);
+    delay(2000);
+    rotate_arm(block_throw, 1);
+    hand_open();
+
+    rotate_arm(forward_up_low, 2);
+    rotate_arm(forward_down_low, 1);
+    hand_close();
+    rotate_arm(forward_up_low, 1);
+    delay(1500);
+    rotate_arm(midblock_throw, 1);
+    hand_open();
+
+    rotate_arm(leftforward_up_low, 2);
+    rotate_arm(leftforward_down_low, 1);
+    hand_close();
+    rotate_arm(leftforward_up_low, 1);
+    delay(1500);
+    rotate_arm(block_throw, 1);
+    hand_open();
+
+    rotate_arm(back_up, 3);
+    rotate_arm(back_down, 1);
+    hand_close();
+}
+
 
 /**
  * @brief RED
