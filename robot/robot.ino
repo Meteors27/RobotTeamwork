@@ -145,7 +145,6 @@ void loop(){
         // delay(250);
 
         motor.stop();
-        // delay(1000);
 
         rgb.magenta();
 
@@ -203,6 +202,7 @@ void loop(){
     if (cornerCount == 3){
         start_time = millis();
         round2 = true;
+        sonar_able = true;
         cornerCount = 0;
     }
 }
