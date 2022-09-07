@@ -54,15 +54,15 @@ typedef struct armmm{
     int upperArm;
 } armstatus;
 
-armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
-armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {158,85,50,40}, leftforward_down = {158,125,50,40};
-armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {115,85,50,40}, rightforward_down = {115,125,50,40};
+armstatus back_up = {5,85,55,20}, back_down = {5,100,55,15}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
+armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {165,85,50,40}, leftforward_down = {165,125,50,40};
+armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {110,85,50,40}, rightforward_down = {110,125,50,40};
 
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
 armstatus _back_up = {5,85,53,20}, _back_down = {5,110,60,30}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
-armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,125,53,40};
+armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,120,53,40};
 armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,37}, _rightforward_down = {110 + delta,125,52,37};
 
 armstatus forward_down_low = {135,85,105,35}, forward_up_low = {135,55,105,35}, midblock_throw = {60,55,105,35};
@@ -567,11 +567,11 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
 
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
+        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
+        delay(300 * speedrate);
         rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.middleArm, &servo_middleArm);
-        delay(300 * speedrate);
-        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
     }
 
@@ -593,24 +593,24 @@ void hand_close(){
 void block_grabbing(){
     hand_open();
 
-    rotate_arm(_rightforward_up, 3);
-    rotate_arm(_rightforward_down, 1);
+    rotate_arm(rightforward_up, 3);
+    rotate_arm(rightforward_down, 1);
     hand_close();
     rotate_to(angle1st, &servo_storageBox);
     // rotate_with_two_servos(5, &servo_storageBox, 95, &servo_hand);
-    rotate_arm(_rightforward_up, 3);
+    rotate_arm(rightforward_up, 3);
     rotate_arm(rightback_up, 2);
     rotate_arm(rightback_down, 1);
     hand_open();
     rotate_arm(back_up, 1);//grab right block
 
 
-    rotate_arm(_forward_up, 2);
+    rotate_arm(forward_up, 2);
     hand_open();
-    rotate_arm(_forward_down, 1);
+    rotate_arm(forward_down, 1);
     hand_close();
     rotate_to(angle2nd, &servo_storageBox);
-    rotate_arm(_forward_up, 1);
+    rotate_arm(forward_up, 1);
     rotate_arm(back_up, 3);
     rotate_arm(back_down, 1);
     hand_open();
@@ -621,11 +621,11 @@ void block_grabbing(){
     delay(500);
     // TODO 数字需要修改
 
-    rotate_arm(_leftforward_up, 3);
-    rotate_arm(_leftforward_down, 1);
+    rotate_arm(leftforward_up, 3);
+    rotate_arm(leftforward_down, 1);
     hand_close();
     rotate_to(angle3rd, &servo_storageBox);
-    rotate_arm(_leftforward_up, 3);
+    rotate_arm(leftforward_up, 3);
     rotate_arm(leftback_up, 2);
     rotate_arm(leftback_down, 1);
     hand_open();
@@ -703,7 +703,7 @@ void block_grabbing_down(){
     rotate_arm(block_throw, 1);
     hand_open();
 
-    rotate_arm(forward_up_low, 2);
+    rotate_arm(forward_up_low, 4);
     rotate_arm(forward_down_low, 1);
     hand_close();
     rotate_arm(forward_up_low, 1);
