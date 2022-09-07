@@ -54,9 +54,9 @@ typedef struct armmm{
     int upperArm;
 } armstatus;
 
-armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {135,85,53,20}, forward_down = {135,115,53,20};
-armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {150,85,50,40}, leftforward_down = {150,125,50,40};
-armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {110,85,50,40}, rightforward_down = {110,125,50,40};
+armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
+armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {158,85,50,40}, leftforward_down = {158,125,50,40};
+armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {115,85,50,40}, rightforward_down = {115,125,50,40};
 
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
@@ -66,7 +66,7 @@ armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforw
 armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,37}, _rightforward_down = {110 + delta,125,52,37};
 
 armstatus forward_down_low = {135,85,105,35}, forward_up_low = {135,55,105,35}, midblock_throw = {60,55,105,35};
-armstatus leftforward_up_low = {175,70,65,25}, leftforward_down_low = {175,130,65,25}, block_throw = {60,70,65,25};
+armstatus leftforward_up_low = {180,70,65,30}, leftforward_down_low = {180,130,65,30}, block_throw = {60,70,65,25};
 armstatus rightforward_up_low = {95,70,65,20}, rightforward_down_low = {95,120,65,20};
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};

@@ -6,6 +6,7 @@
 
 #include "ColorDetector.h"
 
+#define judge_all(r,g,b) !((r) > 1000 && (g) > 1000 && (b) > 1000)
 #define judge_red(r,g,b) ((g) - (r) > 100 && (b) - (r) > 100)
 #define judge_blue(r,g,b) ((g) - (b) > 100 && (r) - (b) > 100)
 #define judge_green(r,g,b) ((r) - (g) > 10 && (b) - (g) > 10)
@@ -41,7 +42,7 @@ String ColorDetector::color()
     delay(10);
     int b = process_blue_value();
     delay(10);
-    if (300 < r+b+g && r+b+g < 2000)
+    if (300 < r+b+g && (r<1000 || g < 1000 || b < 1000))
     {
         if (judge_red(r,g,b)) return "red";
         else if (judge_blue(r,g,b)) return "blue";
