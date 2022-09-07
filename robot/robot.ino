@@ -161,6 +161,8 @@ void loop(){
         if (robotmode == grasping && !round2){
             edgeSensor.disable();
             block_grabbing();
+            rgb.yellow();
+            block_grabbing_down();
         }
         else if(robotmode == grasping && round2){
             edgeSensor.disable();
