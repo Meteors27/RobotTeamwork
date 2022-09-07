@@ -100,9 +100,9 @@ void setup(){
     // rotate_arm(forward_down_low, 2);
     rotate_arm(back_up, 1);
     rotate_arm(back_down, 1);
-    // bluehole.angle = angle1st;
-    // redhole.angle = angle2nd;
-    // greenhole.angle = angle3rd;
+    bluehole.angle = angle1st;
+    redhole.angle = angle2nd;
+    greenhole.angle = angle3rd;
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
@@ -115,48 +115,48 @@ void setup(){
     robotmode = cruising;
 }
 
-// void loop(){
-//     if (edgeSensor.detect() == LINE){
-//         // block_placing();
-//         turnright();
-//         force_cruise(1550, cruise_slowly_strictly);
-//         //直接改成读秒orz
-//         // motor.runright(55);
-//         // motor.runleft(50);
-//         // delay(750);
-//         // motor.runright(50);
-//         // motor.runleft(50);
-//         // delay(250);
+void loop(){
+    if (edgeSensor.detect() == LINE){
+        // block_placing();
+        turnright();
+        force_cruise(1550, cruise_slowly_strictly);
+        //直接改成读秒orz
+        // motor.runright(55);
+        // motor.runleft(50);
+        // delay(750);
+        // motor.runright(50);
+        // motor.runleft(50);
+        // delay(250);
 
-//         motor.stop();
+        motor.stop();
 
-//         rgb.magenta();
+        rgb.magenta();
 
-//         block_placing();
-
-
-//         motor.runleft(-46);
-//         motor.runright(-50);
-//         delay(850);
-//         motor.brake();
-
-//         turnleft();
+        block_placing();
 
 
-//         // avoid redundant increment to cornerCount
-//         // otherwise it will get incremented after the call to turnleft() in the loop()
-//         rgb.turnoff();
-//         force_cruise(1150, cruise_strictly);
-//         rgb.magenta();
-//         force_cruise(400, cruise_down_hill);
-//         motor.stop();
-//         while (1);
-//     }
-//     else{
-//         cruise();
-//         delay(10);
-//     }
-// }
+        motor.runleft(-46);
+        motor.runright(-50);
+        delay(850);
+        motor.brake();
+
+        turnleft();
+
+
+        // avoid redundant increment to cornerCount
+        // otherwise it will get incremented after the call to turnleft() in the loop()
+        rgb.turnoff();
+        force_cruise(1150, cruise_strictly);
+        rgb.magenta();
+        force_cruise(400, cruise_down_hill);
+        motor.stop();
+        while (1);
+    }
+    else{
+        cruise();
+        delay(10);
+    }
+}
 
 void setup_servos(){
     servo_lowerArm.attach(4);
@@ -792,36 +792,36 @@ void block_grabbing_down(){
     hand_close();
 }
 
-void loop(){
-    if (edgeSensor.detect() == LINE){
-        turnright();
-        force_cruise(1550, cruise_slowly_strictly);
+// void loop(){
+//     if (edgeSensor.detect() == LINE){
+//         turnright();
+//         force_cruise(1550, cruise_slowly_strictly);
 
-        motor.stop();
+//         motor.stop();
 
-        rgb.magenta();
+//         rgb.magenta();
 
-        block_grabbing();
-        block_grabbing_down();
-
-
-        motor.runleft(-46);
-        motor.runright(-50);
-        delay(850);
-        turnleft();
+//         block_grabbing();
+//         block_grabbing_down();
 
 
-        // avoid redundant increment to cornerCount
-        // otherwise it will get incremented after the call to turnleft() in the loop()
-        rgb.turnoff();
-        force_cruise(1150, cruise_strictly);
-        rgb.magenta();
-        force_cruise(400, cruise_down_hill);
-        motor.stop();
-        while(1);
-    }
-    else{
-        cruise();
-        delay(10);
-    }
-}
+//         motor.runleft(-46);
+//         motor.runright(-50);
+//         delay(850);
+//         turnleft();
+
+
+//         // avoid redundant increment to cornerCount
+//         // otherwise it will get incremented after the call to turnleft() in the loop()
+//         rgb.turnoff();
+//         force_cruise(1150, cruise_strictly);
+//         rgb.magenta();
+//         force_cruise(400, cruise_down_hill);
+//         motor.stop();
+//         while(1);
+//     }
+//     else{
+//         cruise();
+//         delay(10);
+//     }
+// }

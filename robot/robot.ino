@@ -222,13 +222,31 @@ void loop(){
 }
 
 void setup_servos(){
+    int up_angle = 90;
     servo_lowerArm.attach(4);
+    servo_lowerArm.write(up_angle);
+    //delay(500);
     servo_middleArm.attach(3);
+    servo_middleArm.write(back_down.middleArm);
+    //delay(500);
     servo_upperArm.attach(2);
+    servo_upperArm.write(back_down.upperArm);
+    //delay(500);
     servo_hand.attach(14);
+    servo_hand.write(90);
 
     servo_roboticArm.attach(5);
+    servo_roboticArm.write(back_down.roboticArm);
+    
     servo_storageBox.attach(6);
+    servo_storageBox.write(5);
+
+    delay(1000);
+
+    for(int i = up_angle; i <= back_down.lowerArm-10; i++){
+        servo_lowerArm.write(i);
+        delay(10);
+    }
 }
 
 /**
@@ -255,15 +273,22 @@ void turnright(){
     delay(50);
     motor.brake();
     delay(500);
-    motor.runright(-65);
+    motor.runright(-50);
     motor.runleft(50); //40
-    bool flag = false;
+    bool flag1 = false, flag2 = false;
     while (true){
         if (sensor.judgeM() == ENV){
-            flag = true;
-            delay(100);
+            flag1 = true;
+            delay(50);
         }
-        if (flag && sensor.judgeM() == LINE) break;
+
+        if (sensor.judgeL() == ENV && flag1){
+            flag1 = false; //to avoid get into this block again and again
+            flag2 = true;
+            delay(50);
+        }
+
+        if (flag2 && sensor.judgeL() == LINE) break;
     }
     motor.brake();
     delay(500);
