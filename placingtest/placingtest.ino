@@ -183,19 +183,19 @@ void turnright(){
     motor.runright(50);
     motor.runleft(50);
     delay(50);
-    motor.stop();
+    motor.brake();
     delay(500);
     motor.runright(-65);
     motor.runleft(50); //40
     bool flag = false;
-    while(){
+    while(true){
         if(sensor.judgeM() == ENV) {
             flag = true;
-            delay(500);
+            delay(100);
         }
         if(flag && sensor.judgeM() == LINE) break;
     }
-    motor.stop();
+    motor.brake();
     delay(500);
 }
 

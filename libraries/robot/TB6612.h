@@ -12,6 +12,7 @@ class TB6612 {
         void stop();
         void runright(int speed);
         void runleft(int speed);
+        void brake();
     private:
         int AIN1_PIN;
         int AIN2_PIN;
