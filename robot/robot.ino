@@ -114,9 +114,9 @@ void setup(){
 }
 
 void loop(){
-    if (!sprinted && millis() - start_time > 3400){
+    if (!sprinted && millis() - start_time > 3600){
         rgb.green();
-        force_cruise(800, sprint);
+        force_cruise(950, sprint);
         sprinted = true;
         rgb.white();
     }
