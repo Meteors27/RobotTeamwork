@@ -63,7 +63,7 @@ armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforw
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
 armstatus _back_up = {5,85,53,20}, _back_down = {5,110,60,30}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
 armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,125,53,40};
-armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,40}, _rightforward_down = {110 + delta,125,52,40};
+armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,32}, _rightforward_down = {110 + delta,125,52,32};
 
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
