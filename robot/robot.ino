@@ -32,7 +32,7 @@
 #define FRONT_LEFT_SENSOR (A0)
 #define FRONT_MIDDLE_SENSOR (A1)
 #define FRONT_RIGHT_SENSOR (A2)
-#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar.ping_cm() > 0 && sonar.ping_cm() > 0)
+#define IS_OBSTACLE (cornerCount % 3 == 2 && sonar_able && sonar.ping_cm() > 0 && sonar.ping_cm() > 0)
 
 
 TB6612 motor = TB6612(12, 11, 13, 9, 10, 8, 7);
@@ -45,6 +45,8 @@ Servo servo_lowerArm, servo_middleArm, servo_upperArm, servo_hand;
 Servo servo_roboticArm, servo_storageBox;
 ColorDetector cd(S0, S1, S2, S3, OUT);
 
+#define delta 7
+
 typedef struct armmm{
     int roboticArm;
     int lowerArm;
@@ -55,6 +57,11 @@ typedef struct armmm{
 armstatus back_up = {5,85,53,20}, back_down = {5,110,53,20}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
 armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {165,85,50,40}, leftforward_down = {165,125,50,40};
 armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {110,85,50,40}, rightforward_down = {110,125,50,40};
+
+armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
+armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
+armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
+
 
 typedef struct hooole{
     int angle = 0;
@@ -70,6 +77,7 @@ int cornerCount;
 unsigned long start_time;
 bool sprinted = false, sprinted2 = false;
 bool round2 = false;
+bool sonar_able = true;
 
 enum RobotMode{
     cruising = 0,
@@ -86,7 +94,7 @@ void setup(){
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
-        delay(20);
+            delay(20);
         }
     }
 
@@ -107,7 +115,6 @@ void loop(){
         force_cruise(800, sprint);
         sprinted2 = true;
         rgb.white();
-
     }
     if (edgeSensor.detect() == LINE && sprinted){
         switch (cornerCount % 3){
@@ -165,11 +172,11 @@ void loop(){
         force_cruise(1150, cruise_strictly);
         rgb.magenta();
         force_cruise(400, cruise_down_hill);
-        if (robotmode == placing) {
+        if (robotmode == placing){
             rgb.white();
             force_cruise(5000, cruise);
         }
-        
+
         robotmode = cruising;
         rgb.white();
     }
@@ -224,6 +231,7 @@ void avoidObstacle(){
     while (sensor.judgeM() != LINE){
         ;
     }
+    sonar_able = false;
     //期望其能够斜着上线，后面直接用循迹
 }
 
@@ -239,7 +247,7 @@ void turnright(){
 void turnleft(){
     motor.runright(60);
     motor.runleft(-55); //-50
-    delay(1000);
+    delay(950); // 1000 when low voltage,
 }
 
 void cruise(){
@@ -589,39 +597,39 @@ void block_placing(){
     rotate_arm(back_up, 1);
     if (bluehole.angle != 0){
         rotate_to(bluehole.angle, &servo_storageBox);
-        rotate_arm(leftback_down, 1);
+        rotate_arm(_leftback_down, 1);
         hand_close();
-        rotate_arm(leftback_up, 1);
-        rotate_arm(leftforward_up, 2);
-        rotate_arm(leftforward_down, 1);
+        rotate_arm(_leftback_up, 1);
+        rotate_arm(_leftforward_up, 2);
+        rotate_arm(_leftforward_down, 1);
         hand_open();
-        rotate_arm(forward_up, 3);
+        rotate_arm(_forward_up, 3);
     }
 
     //place right block
 
     if (redhole.angle != 0){
         rotate_to(redhole.angle, &servo_storageBox);
-        rotate_arm(back_down, 1);
+        rotate_arm(_back_down, 1);
         hand_close();
-        rotate_arm(back_up, 1);
-        rotate_arm(forward_up, 2);
-        rotate_arm(forward_down, 1);
+        rotate_arm(_back_up, 1);
+        rotate_arm(_forward_up, 2);
+        rotate_arm(_forward_down, 1);
         hand_open();
-        rotate_arm(forward_up, 1);
-        rotate_arm(back_up, 3);
+        rotate_arm(_forward_up, 1);
+        rotate_arm(_back_up, 3);
     }//place middle block
 
     if (greenhole.angle != 0){
         rotate_to(greenhole.angle, &servo_storageBox);
-        rotate_arm(rightback_down, 1);
+        rotate_arm(_rightback_down, 1);
         hand_close();
-        rotate_arm(rightback_up, 1);
-        rotate_arm(rightforward_up, 2);
-        rotate_arm(rightforward_down, 1);
+        rotate_arm(_rightback_up, 1);
+        rotate_arm(_rightforward_up, 2);
+        rotate_arm(_rightforward_down, 1);
         hand_open();
-        rotate_arm(rightforward_up, 3);
-        rotate_arm(back_up, 2);
+        rotate_arm(_rightforward_up, 3);
+        rotate_arm(_back_up, 2);
     }
 
     rotate_arm(back_down, 1);
