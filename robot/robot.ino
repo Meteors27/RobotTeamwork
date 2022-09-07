@@ -137,6 +137,43 @@ void loop(){
         cornerCount++;
     }
     if (robotmode == grasping || robotmode == placing){
+        turnright();
+        force_cruise(1550, cruise_slowly_strictly);
+        //直接改成读秒orz
+        // motor.runright(55);
+        // motor.runleft(50);
+        // delay(750);
+        // motor.runright(50);
+        // motor.runleft(50);
+        // delay(250);
+
+        motor.stop();
+
+        rgb.magenta();
+
+        if (robotmode == grasping){
+            edgeSensor.disable();
+        }
+        if (robotmode == grasping){
+            block_grabbing();
+        }
+        else{
+            block_placing();
+        }
+
+
+        motor.runleft(-46);
+        motor.runright(-50);
+        delay(850);
+        turnleft();
+
+
+        // avoid redundant increment to cornerCount
+        // otherwise it will get incremented after the call to turnleft() in the loop()
+        rgb.turnoff();
+        force_cruise(1150, cruise_strictly);
+        rgb.magenta();
+        force_cruise(400, cruise_down_hill);
         if (robotmode == placing){
             rgb.white();
             force_cruise(5000, cruise);
@@ -206,15 +243,37 @@ void turnright(){
     motor.runright(50);
     motor.runleft(50);
     delay(50);
+    motor.brake();
+    delay(500);
     motor.runright(-65);
     motor.runleft(50); //40
-    delay(1050);
+    bool flag = false;
+    while (true){
+        if (sensor.judgeM() == ENV){
+            flag = true;
+            delay(100);
+        }
+        if (flag && sensor.judgeM() == LINE) break;
+    }
+    motor.brake();
+    delay(500);
 }
 
 void turnleft(){
+    motor.brake();
+    delay(200);
     motor.runright(60);
     motor.runleft(-55); //-50
-    delay(900); // 1000 when low voltage,
+    bool flag = false;
+    while (true){
+        if (sensor.judgeM() == ENV){
+            flag = true;
+            delay(100);
+        }
+        if (flag && sensor.judgeM() == LINE) break;
+    }
+    motor.brake();
+    delay(100);
 }
 
 void cruise(){
@@ -552,6 +611,7 @@ void block_grabbing(){
 
     rotate_arm(back_down, 1);
     hand_close();
+
 }
 
 void block_placing(){

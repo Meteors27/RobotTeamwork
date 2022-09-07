@@ -61,9 +61,9 @@ armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforw
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
-armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
-armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta - 1,85,53,40}, _leftforward_down = {165 + delta - 2,125,53,40};
-armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,52,40}, _rightforward_down = {110 + delta,125,52,40};
+armstatus _back_up = {5,85,53,20}, _back_down = {5,110,55,25}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
+armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,125,53,40};
+armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,40}, _rightforward_down = {110 + delta,125,52,40};
 
 
 typedef struct hooole{
@@ -114,7 +114,7 @@ void loop(){
     if (edgeSensor.detect() == LINE){
         // block_placing();
         turnright();
-        force_cruise(1500, cruise_slowly_strictly);
+        force_cruise(u, cruise_slowly_strictly);
         //直接改成读秒orz
         // motor.runright(55);
         // motor.runleft(50);
@@ -133,6 +133,8 @@ void loop(){
         motor.runleft(-46);
         motor.runright(-50);
         delay(850);
+        motor.brake();
+
         turnleft();
 
 
@@ -180,6 +182,7 @@ void avoidObstacle(){
 }
 
 void turnright(){
+    //需要移动到turnright外面
     motor.runright(50);
     motor.runleft(50);
     delay(50);
@@ -200,9 +203,21 @@ void turnright(){
 }
 
 void turnleft(){
+    motor.brake();
+    delay(200);
     motor.runright(60);
     motor.runleft(-55); //-50
-    delay(900); // 1000 when low voltage,
+    bool flag = false;
+    while(true){
+        if(sensor.judgeM() == ENV) {
+            flag = true;
+            delay(100);
+        }
+        if(flag && sensor.judgeM() == LINE) break;
+    }
+    motor.brake();
+    delay(100);
+    // delay(900); // 1000 when low voltage,
 }
 
 void cruise(){
@@ -579,7 +594,7 @@ void block_placing(){
         rotate_arm(_rightforward_up, 2);
         rotate_arm(_rightforward_down, 1);
         hand_open();
-        rotate_arm(_rightforward_up, 3);
+        rotate_arm(_rightforward_up, 1);
         rotate_arm(_back_up, 2);
     }
 
