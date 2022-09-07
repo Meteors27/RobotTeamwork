@@ -158,11 +158,13 @@ void loop(){
 
         rgb.magenta();
 
-        if (robotmode == grasping){
+        if (robotmode == grasping && !round2){
             edgeSensor.disable();
-        }
-        if (robotmode == grasping){
             block_grabbing();
+        }
+        else if(robotmode == grasping && round2){
+            edgeSensor.disable();
+            block_grabbing_down();
         }
         else{
             block_placing();
@@ -198,7 +200,6 @@ void loop(){
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
         // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
         force_cruise(1000, cruise_strictly);
-        //TODO 角度待改动
         force_cruise(2500, cruise);
         // force_cruise_rotate(5, 2500, cruise);
         robotmode = cruising;
@@ -207,7 +208,7 @@ void loop(){
     }
     else{
         cruise();
-        delay(8);
+        delay(10);
     }
     if (cornerCount == 3){
         start_time = millis();
@@ -663,17 +664,6 @@ void block_placing(){
 /**
  * @brief BLUE.
  */
-void place_left_up(){
-    rotate_to(bluehole.angle, &servo_storageBox);
-    rotate_arm(back_down, 1);
-    hand_close();
-    rotate_arm(back_up, 1);
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(leftforward_down, 1);
-    hand_open();
-    rotate_arm(leftforward_up, 3);
-    rotate_arm(back_up, 2);//place left block
-}
 
 void block_grabbing_down(){
     hand_open();
@@ -706,124 +696,6 @@ void block_grabbing_down(){
     hand_close();
 }
 
-
-/**
- * @brief RED
- */
-void place_middle_up(){
-    rotate_to(95, &servo_storageBox);
-    rotate_arm(back_down, 1);
-    hand_close();
-    rotate_arm(back_up, 1);
-    rotate_arm(forward_up, 2);
-    rotate_arm(forward_down, 1);
-    hand_open();
-    rotate_arm(forward_up, 1);
-    rotate_arm(back_up, 3);//place middle block
-}
-
-/**
- * @brief GREEN
- */
-void place_right_up(){
-    rotate_to(180, &servo_storageBox);
-    rotate_arm(back_down, 1);
-    hand_close();
-    rotate_arm(back_up, 1);
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(rightforward_down, 1);
-    hand_open();
-    rotate_arm(rightforward_up, 3);
-    rotate_arm(back_up, 2);//place right block
-}
-/**
- * @brief 将指定电机转到指定角度，先输入本次指定电机数量，再分别输入：
- * 电机1的目标角度，电机1指针，电机2的目标角度，电机2指针……
- *
- * @param num_of_servos 本次需要使用的电机数量
- * @param ... 先输入一个角度，再输入一个电机 and so on...
- */
-void rotate_with_servos(int num_of_servos, ...){
-    va_list valist;
-    va_start(valist, num_of_servos);
-    Servo* servoP;
-
-    Servo* servos[num_of_servos];
-    int now_angles[num_of_servos];
-    int tar_angles[num_of_servos];
-    double increments[num_of_servos];
-    int increment[num_of_servos];
-    double min_diff = 360.0;
-    for (int i = 0; i < num_of_servos; i++){
-        tar_angles[i] = va_arg(valist, int);
-        servoP = va_arg(valist, Servo*);
-        servos[i] = servoP;
-        now_angles[i] = servoP->read();
-        increments[i] = now_angles[i] - tar_angles[i];
-        if (increments[i] < min_diff){
-            min_diff = increments[i];
-        }
-    }
-    va_end(valist);
-
-    for (int i = 0; i < num_of_servos; i++){
-        increments[i] /= fabs(min_diff);
-        increment[i] = (int)(increments[i]);
-    }
-
-
-    for (int i = 0; i < min_diff; i++){
-        for (int j = 0; j < num_of_servos; j++){
-            now_angles[j] += increment[j];
-            (*(servos[j])).write(now_angles[j]);
-        }
-        delay(15);
-    }
-}
-
-void rotate_with_two_servos(int angle1, Servo* servo1, int angle2, Servo* servo2){
-    int now_angle1 = servo1->read();
-    int now_angle2 = servo2->read();
-
-    int increment1 = angle1 > now_angle1 ? 1 : -1;
-    int increment2 = angle2 > now_angle2 ? 1 : -1;
-
-    while (angle1 != now_angle1 || angle2 != now_angle2){
-        if (angle1 != now_angle1){
-            now_angle1 += increment1;
-            servo1->write(now_angle1);
-        }
-        if (angle2 != now_angle2){
-            now_angle2 += increment2;
-            servo2->write(now_angle2);
-        }
-        delay(15);
-    }
-}
-
-
-/**
- * @brief Rotate the plate while cruising.
- * calls to delay() included.
- *
- * @param target_angle 目标角度
- * @param time 巡线时间（需大于1.5秒）
- * @param cruise_type 巡线类型（函数指针）
- */
-void force_cruise_rotate(int target_angle, int time, void cruise_type()){
-    int current_time = millis();
-    int now_angle = servo_storageBox.read();
-    int increment = now_angle > target_angle ? 1 : -1;
-    while (millis() - current_time < time){
-        cruise_type();
-        if (now_angle != target_angle){
-            now_angle += increment;
-            servo_storageBox.write(now_angle);
-        }
-        delay(15);
-    }
-}
-
 void record(String color, int angle){
     if (color == "red"){
         redhole.angle = angle;
@@ -850,3 +722,133 @@ void test_light(String color){
         rgb.turnoff();
     }
 }
+
+// void place_left_up(){
+//     rotate_to(bluehole.angle, &servo_storageBox);
+//     rotate_arm(back_down, 1);
+//     hand_close();
+//     rotate_arm(back_up, 1);
+//     rotate_arm(leftforward_up, 3);
+//     rotate_arm(leftforward_down, 1);
+//     hand_open();
+//     rotate_arm(leftforward_up, 3);
+//     rotate_arm(back_up, 2);//place left block
+// }
+
+
+// /**
+//  * @brief RED
+//  */
+// void place_middle_up(){
+//     rotate_to(95, &servo_storageBox);
+//     rotate_arm(back_down, 1);
+//     hand_close();
+//     rotate_arm(back_up, 1);
+//     rotate_arm(forward_up, 2);
+//     rotate_arm(forward_down, 1);
+//     hand_open();
+//     rotate_arm(forward_up, 1);
+//     rotate_arm(back_up, 3);//place middle block
+// }
+
+// /**
+//  * @brief GREEN
+//  */
+// void place_right_up(){
+//     rotate_to(180, &servo_storageBox);
+//     rotate_arm(back_down, 1);
+//     hand_close();
+//     rotate_arm(back_up, 1);
+//     rotate_arm(rightforward_up, 3);
+//     rotate_arm(rightforward_down, 1);
+//     hand_open();
+//     rotate_arm(rightforward_up, 3);
+//     rotate_arm(back_up, 2);//place right block
+// }
+// /**
+//  * @brief 将指定电机转到指定角度，先输入本次指定电机数量，再分别输入：
+//  * 电机1的目标角度，电机1指针，电机2的目标角度，电机2指针……
+//  *
+//  * @param num_of_servos 本次需要使用的电机数量
+//  * @param ... 先输入一个角度，再输入一个电机 and so on...
+//  */
+// void rotate_with_servos(int num_of_servos, ...){
+//     va_list valist;
+//     va_start(valist, num_of_servos);
+//     Servo* servoP;
+
+//     Servo* servos[num_of_servos];
+//     int now_angles[num_of_servos];
+//     int tar_angles[num_of_servos];
+//     double increments[num_of_servos];
+//     int increment[num_of_servos];
+//     double min_diff = 360.0;
+//     for (int i = 0; i < num_of_servos; i++){
+//         tar_angles[i] = va_arg(valist, int);
+//         servoP = va_arg(valist, Servo*);
+//         servos[i] = servoP;
+//         now_angles[i] = servoP->read();
+//         increments[i] = now_angles[i] - tar_angles[i];
+//         if (increments[i] < min_diff){
+//             min_diff = increments[i];
+//         }
+//     }
+//     va_end(valist);
+
+//     for (int i = 0; i < num_of_servos; i++){
+//         increments[i] /= fabs(min_diff);
+//         increment[i] = (int)(increments[i]);
+//     }
+
+
+//     for (int i = 0; i < min_diff; i++){
+//         for (int j = 0; j < num_of_servos; j++){
+//             now_angles[j] += increment[j];
+//             (*(servos[j])).write(now_angles[j]);
+//         }
+//         delay(15);
+//     }
+// }
+
+// void rotate_with_two_servos(int angle1, Servo* servo1, int angle2, Servo* servo2){
+//     int now_angle1 = servo1->read();
+//     int now_angle2 = servo2->read();
+
+//     int increment1 = angle1 > now_angle1 ? 1 : -1;
+//     int increment2 = angle2 > now_angle2 ? 1 : -1;
+
+//     while (angle1 != now_angle1 || angle2 != now_angle2){
+//         if (angle1 != now_angle1){
+//             now_angle1 += increment1;
+//             servo1->write(now_angle1);
+//         }
+//         if (angle2 != now_angle2){
+//             now_angle2 += increment2;
+//             servo2->write(now_angle2);
+//         }
+//         delay(15);
+//     }
+// }
+
+
+// /**
+//  * @brief Rotate the plate while cruising.
+//  * calls to delay() included.
+//  *
+//  * @param target_angle 目标角度
+//  * @param time 巡线时间（需大于1.5秒）
+//  * @param cruise_type 巡线类型（函数指针）
+//  */
+// void force_cruise_rotate(int target_angle, int time, void cruise_type()){
+//     int current_time = millis();
+//     int now_angle = servo_storageBox.read();
+//     int increment = now_angle > target_angle ? 1 : -1;
+//     while (millis() - current_time < time){
+//         cruise_type();
+//         if (now_angle != target_angle){
+//             now_angle += increment;
+//             servo_storageBox.write(now_angle);
+//         }
+//         delay(15);
+//     }
+// }
