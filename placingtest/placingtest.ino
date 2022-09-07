@@ -61,7 +61,7 @@ armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforw
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
-armstatus _back_up = {5,85,53,20}, _back_down = {5,110,55,25}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
+armstatus _back_up = {5,85,53,20}, _back_down = {5,110,60,30}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
 armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,125,53,40};
 armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,40}, _rightforward_down = {110 + delta,125,52,40};
 
@@ -114,7 +114,7 @@ void loop(){
     if (edgeSensor.detect() == LINE){
         // block_placing();
         turnright();
-        force_cruise(u, cruise_slowly_strictly);
+        force_cruise(1550, cruise_slowly_strictly);
         //直接改成读秒orz
         // motor.runright(55);
         // motor.runleft(50);
@@ -569,7 +569,7 @@ void block_placing(){
         rotate_arm(_leftforward_up, 2);
         rotate_arm(_leftforward_down, 1);
         hand_open();
-        rotate_arm(_forward_up, 3);
+        rotate_arm(_leftforward_up, 3);
     }
 
     //place right block
@@ -594,8 +594,8 @@ void block_placing(){
         rotate_arm(_rightforward_up, 2);
         rotate_arm(_rightforward_down, 1);
         hand_open();
-        rotate_arm(_rightforward_up, 1);
-        rotate_arm(_back_up, 2);
+        rotate_arm(_rightforward_up, 3);
+        rotate_arm(_back_up, 3);
     }
 
     rotate_arm(back_down, 1);
