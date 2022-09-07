@@ -91,9 +91,13 @@ enum RobotMode{
 void setup(){
     cornerCount = 1;
     setup_servos();
+    rgb.blue();
     rotate_to(angle1st, &servo_storageBox);
     rotate_arm(back_up, 1);
     rotate_arm(back_down, 1);
+    bluehole.angle = angle1st;
+    redhole.angle = angle2nd;
+    greenhole.angle = angle3rd;
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
@@ -107,70 +111,43 @@ void setup(){
 }
 
 void loop(){
-    if (!sprinted && millis() - start_time > 3400){
-        rgb.green();
-        force_cruise(800, sprint);
-        sprinted = true;
-        rgb.white();
-    }
-    if (round2 && !sprinted2 && millis() - start_time > 3000){
-        rgb.green();
-        force_cruise(950, sprint);
-        sprinted2 = true;
-        rgb.white();
-    }
-    if (edgeSensor.detect() == LINE && sprinted){
-        switch (cornerCount % 3){
-        case 0:
-            robotmode = cruising;
-            rgb.white();
-            break;
-        case 1:
-            robotmode = grasping;
-            rgb.yellow();
-            break;
-        case 2:
-            robotmode = placing;
-            rgb.cyan();
-            break;
-        }
-        cornerCount++;
-    }
-    if (robotmode == grasping || robotmode == placing){
-        if (robotmode == placing){
-            rgb.white();
-            force_cruise(5000, cruise);
-        }
+    if (edgeSensor.detect() == LINE){
+        // block_placing();
+        turnright();
+        force_cruise(1500, cruise_slowly_strictly);
+        //直接改成读秒orz
+        // motor.runright(55);
+        // motor.runleft(50);
+        // delay(750);
+        // motor.runright(50);
+        // motor.runleft(50);
+        // delay(250);
 
-        robotmode = cruising;
-        rgb.white();
-    }
-    else if (IS_OBSTACLE){
-        rgb.red();
-        // avoidObstacle过程中亮红灯
+        motor.stop();
 
-        avoidObstacle();
-        rgb.blue();
-        // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
-        // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
-        force_cruise(1000, cruise_strictly);
-        //TODO 角度待改动
-        force_cruise(2500, cruise);
-        // force_cruise_rotate(5, 2500, cruise);
-        robotmode = cruising;
-        rgb.white();
-        edgeSensor.enable();
+        rgb.magenta();
+
+        block_placing();
+
+
+        motor.runleft(-46);
+        motor.runright(-50);
+        delay(850);
+        turnleft();
+
+
+        // avoid redundant increment to cornerCount
+        // otherwise it will get incremented after the call to turnleft() in the loop()
+        rgb.turnoff();
+        force_cruise(1150, cruise_strictly);
+        rgb.magenta();
+        force_cruise(400, cruise_down_hill);
+        motor.stop();
+        while(1) ;
     }
     else{
         cruise();
-        delay(8);
-    }
-    if (cornerCount == 3){
-        start_time = millis();
-        rgb.turnoff();
-        round2 = true;
-        sonar_able = true;
-        cornerCount = 0;
+        delay(10);
     }
 }
 
@@ -206,9 +183,20 @@ void turnright(){
     motor.runright(50);
     motor.runleft(50);
     delay(50);
+    motor.stop();
+    delay(500);
     motor.runright(-65);
     motor.runleft(50); //40
-    delay(1050);
+    bool flag = false;
+    while(){
+        if(sensor.judgeM() == ENV) {
+            flag = true;
+            delay(500);
+        }
+        if(flag && sensor.judgeM() == LINE) break;
+    }
+    motor.stop();
+    delay(500);
 }
 
 void turnleft(){
