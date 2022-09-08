@@ -61,7 +61,7 @@ armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforw
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
-armstatus _back_up = {5,85,53,20}, _back_down = {5,110,60,30}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
+armstatus _back_up = {5,85,53,20}, _back_down = {5,110,65,30}, _forward_up = {140 + delta - 2,85,53,20}, _forward_down = {140 + delta - 2,115,53,20};
 armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,65,30}, _leftforward_up = {165 + delta + 1,85,53,40}, _leftforward_down = {165 + delta + 1,120,53,40};
 armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightforward_up = {110 + delta,85,52,37}, _rightforward_down = {110 + delta,125,52,37};
 
@@ -203,7 +203,7 @@ void loop(){
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
         // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
         force_cruise(1000, cruise_strictly);
-        force_cruise(7000, cruise);
+        force_cruise(6550, cruise);
         // force_cruise_rotate(5, 2500, cruise);
         robotmode = cruising;
         rgb.white();
