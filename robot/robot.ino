@@ -27,7 +27,7 @@
 #define EDGE_PIN (A3)
 #define TRIGGER_PIN  (28)
 #define ECHO_PIN     (30)
-#define MAX_DISTANCE (100)
+#define MAX_DISTANCE (72)
 #define CK008_PIN (38)
 #define FRONT_LEFT_SENSOR (A0)
 #define FRONT_MIDDLE_SENSOR (A1)
@@ -56,7 +56,7 @@ typedef struct armmm{
 
 armstatus back_up = {5,85,55,20}, back_down = {5,100,55,15}, forward_up = {140,85,53,20}, forward_down = {140,115,53,20};
 armstatus leftback_up = {5,85,60,25}, leftback_down = {5,110,60,25}, leftforward_up = {165,85,50,40}, leftforward_down = {165,125,50,40};
-armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {110,85,50,40}, rightforward_down = {110,125,50,40};
+armstatus rightback_up = {5,85,60,25}, rightback_down = {5,110,60,25}, rightforward_up = {115,85,50,40}, rightforward_down = {115,125,50,40};
 
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
@@ -203,7 +203,7 @@ void loop(){
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
         // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
         force_cruise(1000, cruise_strictly);
-        force_cruise(5000, cruise);
+        force_cruise(7000, cruise);
         // force_cruise_rotate(5, 2500, cruise);
         robotmode = cruising;
         rgb.white();
@@ -540,16 +540,12 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         // delay(100 * speedrate);
         
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
-        delay(300);
-        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         break;
     case 2:
 
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
-        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
-        delay(300);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.middleArm, &servo_middleArm);
@@ -558,8 +554,6 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         delay(300 * speedrate);
         break;
     case 3:
-        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
-        delay(300);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
@@ -573,8 +567,6 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
 
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
-        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
-        delay(300);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
