@@ -67,7 +67,7 @@ armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,65,30}, _rightf
 
 armstatus rightforward_up_low = {95,70,65,25}, rightforward_down_low = {95,120,65,25};
 armstatus forward_down_low = {135,85,105,35}, forward_up_low = {135,55,105,35}, midblock_throw = {60,55,105,35};
-armstatus leftforward_up_low = {180,70,60,20}, leftforward_down_low = {180,130,60,20}, block_throw = {60,70,65,25};
+armstatus leftforward_up_low = {180,70,60,25}, leftforward_down_low = {180,130,60,25}, block_throw = {60,70,65,25};
 // armstatus _back_up = {5,85,53,20}, _back_down = {5,110,53,20}, _forward_up = {140 + delta,85,53,20}, _forward_down = {140 + delta,115,53,20};
 // armstatus _leftback_up = {5,85,60,25}, _leftback_down = {5,110,60,25}, _leftforward_up = {165 + delta,85,50,40}, _leftforward_down = {165 + delta,125,50,40};
 // armstatus _rightback_up = {5,85,60,25}, _rightback_down = {5,110,60,25}, _rightforward_up = {110 + delta,85,50,40}, _rightforward_down = {110 + delta,125,50,40};
@@ -99,13 +99,8 @@ void setup(){
     cornerCount = 1;
     setup_servos();
     rotate_to(angle1st, &servo_storageBox);
-    // rotate_arm(back_up, 1);
-    // rotate_arm(back_down, 1);
-    hand_open();
-    rotate_arm(leftforward_up_low,1);
-    rotate_arm(leftforward_down_low,1);
-    hand_close();
-    rotate_arm(leftforward_up_low,1);
+    rotate_arm(back_up, 1);
+    rotate_arm(back_down, 1);
     while (1){
         if (ck008.detect() == TOUCHED){
             break;
