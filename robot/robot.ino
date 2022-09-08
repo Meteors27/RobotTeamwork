@@ -203,7 +203,7 @@ void loop(){
         // 调用结束后的巡线先亮蓝灯，出了这个if亮巡线白灯
         // 在这里加入不带delay的颜色传感器detect并算出需要转的角度
         force_cruise(1000, cruise_strictly);
-        force_cruise(2500, cruise);
+        force_cruise(5000, cruise);
         // force_cruise_rotate(5, 2500, cruise);
         robotmode = cruising;
         rgb.white();
@@ -224,7 +224,7 @@ void loop(){
 
 void setup_servos(){
     int up_angle = 90;
-    servo_lowerArm.attach(4);
+    servo_lowerArm.attach(1);
     servo_lowerArm.write(up_angle);
     //delay(500);
     servo_middleArm.attach(3);
@@ -538,7 +538,9 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         //新增并行
         // rotate_with_two_servos(ARMSTATUS.roboticArm, &servo_roboticArm, ARMSTATUS.storageBoxz, &servo_storageBox);
         // delay(100 * speedrate);
-
+        
+        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
+        delay(300);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         break;
@@ -547,6 +549,8 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
+        delay(300);
+        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.middleArm, &servo_middleArm);
         delay(300 * speedrate);
@@ -554,6 +558,8 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
         delay(300 * speedrate);
         break;
     case 3:
+        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
+        delay(300);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
@@ -567,6 +573,8 @@ void rotate_arm(armstatus ARMSTATUS, int rotate_mode){
 
         rotate_to(ARMSTATUS.roboticArm, &servo_roboticArm);
         delay(100 * speedrate);
+        rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
+        delay(300);
         rotate_to(ARMSTATUS.lowerArm, &servo_lowerArm);
         delay(300 * speedrate);
         rotate_to(ARMSTATUS.upperArm, &servo_upperArm);
@@ -719,8 +727,8 @@ void block_grabbing_down(){
     rotate_arm(block_throw, 1);
     hand_open();
 
-    rotate_arm(back_up, 3);
-    rotate_arm(back_down, 1);
+    rotate_arm(_back_up, 3);
+    rotate_arm(_back_down, 1);
     hand_close();
 }
 

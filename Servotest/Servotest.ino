@@ -1,20 +1,13 @@
 #include <Servo.h>                    
 Servo myservo;
 void setup(){
-//    Serial.begin(9600);
+//    Serial.(9600);
     myservo.attach(13);
 }
 
 void loop(){
-    rotate(0);
-    delay(500);
-    rotate(120);
-//    Serial.println("+");
-  /* Rotating a positive angle indicates the hand open. */
-    delay(2000);
-    rotate(-120);
-//    Serial.println("-");
-    delay(1000);
+    rotate(90);
+    while(1);
 }
 
 void rotate(int angle){
